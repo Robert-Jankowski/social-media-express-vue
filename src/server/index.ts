@@ -4,6 +4,7 @@ import {sessionMiddlewareWrapper} from "./middleware";
 import {Server as WebsocketServer} from "socket.io";
 import {Server as HttpsServer} from "https";
 import CONFIG from "./config";
+import {Server} from "http";
 
 // MONGO STORE
 const mongoStore = mongoStoreWrapper({
@@ -36,6 +37,6 @@ const io: WebsocketServer = websocketServerWrapper({
   sessionMiddleware,
 });
 
-// @ts-ignore
-io.attach(server);
+
+io.attach(server as Server);
 app.set('socketio', io);
