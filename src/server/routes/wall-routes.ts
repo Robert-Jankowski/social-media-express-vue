@@ -9,7 +9,7 @@ const routes = Router();
 // Summary:       get user wall
 // Description:   if wall is public and user not logged - get wall without comments / if friend - get public or private
 // Permissions:   public - anyone / private - user or friends
-// Response:      { wall }
+// Response:      { posts }
 routes.get('/', (req: Request, res: Response) => {
   return res.send().status(200);
 });
