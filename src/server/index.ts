@@ -5,6 +5,15 @@ import {Server as WebsocketServer} from "socket.io";
 import {Server as HttpsServer} from "https";
 import CONFIG from "./config";
 import {Server} from "http";
+import mongoose from "mongoose";
+
+mongoose
+  .connect(
+    `mongodb://${CONFIG.MONGO_HOST}:${CONFIG.MONGO_PORT}/${CONFIG.MONGO_DB_NAME}`,
+    CONFIG.MONGO_OPTIONS,
+    (_) => {
+      console.log("Connected to mongoDB: " + `mongodb://${CONFIG.MONGO_HOST}:${CONFIG.MONGO_PORT}/${CONFIG.MONGO_DB_NAME}`);
+    })
 
 // MONGO STORE
 const mongoStore = mongoStoreWrapper({

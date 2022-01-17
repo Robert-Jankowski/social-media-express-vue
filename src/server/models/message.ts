@@ -1,14 +1,9 @@
 import { Schema, model } from 'mongoose';
+import {MessageDefinition} from "../types/model-types";
 
 const { String, ObjectId, Boolean } = Schema.Types;
 
-interface Message {
-  content: string;
-  from: Schema.Types.ObjectId;
-  unread: boolean;
-}
-
-const messageSchema = new Schema<Message>({
+const messageSchema = new Schema<MessageDefinition>({
   content: {
     type: String,
     required: true,

@@ -1,14 +1,9 @@
 import { Schema, model } from 'mongoose';
+import { CommentDefinition } from "../types/model-types";
 
 const { String, ObjectId } = Schema.Types;
 
-interface Comment {
-  content: string;
-  author: Schema.Types.ObjectId;
-  comments: Schema.Types.ObjectId;
-}
-
-const commentSchema = new Schema<Comment>({
+const commentSchema = new Schema<CommentDefinition>({
   content: {
     type: String,
     required: true,

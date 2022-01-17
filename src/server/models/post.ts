@@ -1,15 +1,9 @@
 import { Schema, model } from 'mongoose';
+import { PostDefinition } from "../types/model-types";
 
 const { String, ObjectId } = Schema.Types;
 
-interface Post {
-  title: string;
-  content: string;
-  author: Schema.Types.ObjectId;
-  comments: Schema.Types.ObjectId;
-}
-
-const postSchema = new Schema<Post>({
+const postSchema = new Schema<PostDefinition>({
   title: {
     type: String,
     required: true,

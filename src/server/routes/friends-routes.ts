@@ -8,6 +8,7 @@ const routes = Router();
 // Summary:       send message to friend
 // Description:   add message to friend messages as unread, notify if logged
 // Permissions:   user
+// Body:          { content }
 // Response:      { deleted: true }
 routes.post('/:friendId', (req: Request, res: Response) => {
   return res.send().status(200);

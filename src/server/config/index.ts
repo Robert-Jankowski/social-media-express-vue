@@ -1,12 +1,14 @@
 import fs from "fs";
 import dotenv from 'dotenv';
 import { ServerOptions } from "https";
+import { ConnectOptions } from "mongoose";
 
 dotenv.config();
 
 const MONGO_PORT = process.env.MONGO_PORT ?? '27017';
 const MONGO_HOST = process.env.MONGO_HOST ?? '127.0.0.1';
 const MONGO_DB_NAME = process.env.MONGO_DB_NAME ?? 'project';
+const MONGO_OPTIONS: ConnectOptions = { };
 
 const APP_PORT = process.env.APP_PORT ?? '8080';
 const APP_HOST = process.env.APP_HOST ?? 'localhost';
@@ -24,6 +26,7 @@ export default {
   MONGO_PORT,
   MONGO_HOST,
   MONGO_DB_NAME,
+  MONGO_OPTIONS,
   APP_PORT,
   APP_HOST,
   SESSION_OPTIONS,

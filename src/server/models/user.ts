@@ -1,17 +1,9 @@
 import { Schema, model } from 'mongoose';
+import {UserDefinition} from "../types/model-types";
 
 const { String, ObjectId } = Schema.Types;
 
-interface User {
-  login: string;
-  password: string;
-  friends: Schema.Types.ObjectId[];
-  friendRequests: Schema.Types.ObjectId[];
-  messages: Schema.Types.ObjectId[];
-  posts: Schema.Types.ObjectId[];
-}
-
-const userSchema = new Schema<User>({
+const userSchema = new Schema<UserDefinition>({
   login: {
     type: String,
     required: true,
