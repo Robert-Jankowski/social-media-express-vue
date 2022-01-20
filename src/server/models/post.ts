@@ -12,6 +12,10 @@ const postSchema = new Schema<PostDefinition>({
     type: String,
     required: true,
   },
+  type: {
+    type: String,
+    required: true,
+  },
   author: {
     type: ObjectId,
     ref: 'User',

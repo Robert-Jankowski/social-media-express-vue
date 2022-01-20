@@ -13,10 +13,9 @@ const routes = Router();
 // Description:   if login and password are correct then create session for user
 // Permissions:   anyone
 // Body:          { login, password }
-// Response:      { userId } - create session
 routes.post('/login', passport.authenticate('local', {
   successReturnToOrRedirect: '/',
-  failureRedirect: '/',
+  failureRedirect: '/login',
   failureMessage: true,
 }));
 
@@ -34,17 +33,18 @@ routes.post('/logout', (req: Request, res: Response) => {
 
 // Method:        POST
 // Summary:       register new account
-// Description:   if login is not occupied create account
+// Description:   if login is not occupied create account. if username not provided use login
 // Permissions:   anyone
-// Body:          { login, password }
+// Body:          { login, password, username? }
 // Response:      { userId }
 routes.post('/register', async (req: Request, res: Response) => {
 
   try {
 
-    const {login, password} = req.body as {
+    const {login, password, username} = req.body as {
       login: string;
       password: string;
+      username?: string;
     }
 
     if (isNil(login) || isNil(password)) {
@@ -58,6 +58,7 @@ routes.post('/register', async (req: Request, res: Response) => {
     const newUser = new User({
       login,
       password,
+      username: username ?? login,
       friends: [],
       friendRequests: [],
       messages: [],

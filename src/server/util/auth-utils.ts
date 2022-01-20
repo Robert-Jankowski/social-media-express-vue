@@ -1,9 +1,10 @@
 import { Function } from '@babel/types';
 import { isNil } from 'lodash';
-import { Error } from 'mongoose';
+import {Error, ObjectId} from 'mongoose';
 import { User } from '../models';
 import {ResponseCodes} from "./response-codes";
 import { Request, Response, NextFunction } from 'express';
+import user from "../models/user";
 
 
 // @ts-ignore
@@ -45,7 +46,7 @@ export const userAuthorization = (req: Request, res: Response, next: NextFunctio
     next() :
     res.sendStatus(ResponseCodes.UNAUTHORIZED);
 
-// // @ts-ignore
+
 // export const friendAuthorization = async (req: Request, res: Response, next: NextFunction) => {
 //
 //   const targetUserId = req.params.id;
@@ -65,3 +66,14 @@ export const userAuthorization = (req: Request, res: Response, next: NextFunctio
 //
 //   return next();
 // }
+
+export const isFriend = async (userId: ObjectId, friendId: ObjectId): Promise<boolean | undefined> => {
+
+  const user = await User.findById(userId);
+
+  if (isNil(user)) {
+    return undefined;
+  }
+
+  return user.friends.includes(friendId);
+}
