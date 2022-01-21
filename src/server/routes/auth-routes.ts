@@ -22,7 +22,7 @@ routes.post(
     .send({
       user: {
         // @ts-ignore
-        username: req.user.username,
+        username: req.user.login,
         // @ts-ignore
         id: req.user.id,
     }})
@@ -77,7 +77,12 @@ routes.post('/register', async (req: Request, res: Response) => {
 
     return res
       .status(ResponseCodes.CREATED)
-      .send(saved._id);
+      .send({
+        user: {
+          id: saved._id,
+          username: saved.login,
+        }
+      });
 
   } catch (error) {
     return res

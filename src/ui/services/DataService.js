@@ -14,9 +14,12 @@ export class DataService {
     return Promise.resolve({data: POSTS_MOCKS});
   }
 
-  logIn (login, password) {
-    console.log(this.proxy)
+  loginUser (login, password) {
     return axios.post(this.buildUrl('user/login'), { login, password }, this.proxy);
+  }
+
+  registerUser (login, password) {
+    return axios.post(this.buildUrl('user/register'), { login, password }, this.proxy);
   }
 
   buildUrl(url) {
