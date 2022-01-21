@@ -13,11 +13,20 @@ const routes = Router();
 // Description:   if login and password are correct then create session for user
 // Permissions:   anyone
 // Body:          { login, password }
-routes.post('/login', passport.authenticate('local', {
-  successReturnToOrRedirect: '/',
-  failureRedirect: '/login',
-  failureMessage: true,
-}));
+routes.post(
+  '/login',
+  passport.authenticate('local', {}), (req, res) => {
+
+  return res
+    .status(ResponseCodes.OK)
+    .send({
+      user: {
+        // @ts-ignore
+        username: req.user.username,
+        // @ts-ignore
+        id: req.user.id,
+    }})
+});
 
 
 // Method:        POST

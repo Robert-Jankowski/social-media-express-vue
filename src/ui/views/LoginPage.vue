@@ -22,15 +22,15 @@ export default defineComponent({
     return {
       login: '',
       password: '',
-      dataService: new DataService('https://localhost:8080'),
+      dataService: new DataService(),
     }
   },
   methods: {
     handleSubmit() {
       this.dataService.logIn(this.login, this.password).then((res) => {
-        this.$store.commit('SET_USER_INFO', res.data)
+        this.$store.commit('SET_USER', res.data.user)
         this.$router.push({ name: 'MainPage' })
-      }).catch(console.log)
+      }).catch(alert)
     }
   },
 });

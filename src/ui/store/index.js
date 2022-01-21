@@ -2,24 +2,29 @@ import { createStore } from 'vuex';
 import { isNil } from 'lodash';
 
 export default createStore({
-  state: {
-    userInfo: null,
-    askForLogin: true,
+  state() {
+    return {
+      user: null,
+      askForLogin: true,
+    }
   },
   mutations: {
     SET_ASKED(state, asked) {
       state.askForLogin = asked;
     },
-    SET_USER_INFO(state, userInfo) {
-      state.userInfo = userInfo;
-    }
+    SET_USER(state, user) {
+      state.user = user;
+    },
   },
   getters: {
     isLogged(state) {
-      return !isNil(state.userInfo);
+      return !isNil(state.userId);
     },
     userId(state) {
-      return state.userInfo?._id;
+      return state?.user?.id;
+    },
+    username(state) {
+      return state?.user?.username;
     },
     askForLogin(state) {
       return state.askForLogin;

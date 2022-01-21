@@ -1,10 +1,8 @@
-import newStore from './ui/store/index'
+import store from './ui/store/index'
 import App from './ui/App.vue'
 import { createApp } from 'vue';
 import router from "./ui/router";
 import axios from "axios";
-
-const store = newStore;
 
 const app = createApp(App)
   .use(router)
@@ -13,7 +11,3 @@ const app = createApp(App)
 app.provide('axios', axios.defaults.withCredentials = true);
 
 app.mount('#app');
-
-export {
-  store,
-}

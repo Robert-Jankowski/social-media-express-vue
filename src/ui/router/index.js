@@ -1,13 +1,12 @@
-import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import LoginPage from '../views/LoginPage.vue';
 import MainPage from '../views/MainPage.vue';
-import { store } from "../../main";
 import Wall from "../views/Wall";
 
 const routes = [
   {
     path: '/',
-    redirect: '/welcome',
+    redirect: '/login',
     meta: {
       requiresAuth: false,
     },
@@ -21,15 +20,20 @@ const routes = [
     },
   },
   {
-    path: '/wall/:userId/public',
+    path: '/wall/:userId/private',
+    name: 'Wall',
+    component: Wall,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  {
+    path: '/wall/:userId/',
     name: 'Wall',
     component: Wall,
     meta: {
       requiresAuth: false,
-    },
-    props: {
-      wallType: 'PUBLIC',
-    },
+    }
   },
   {
     path: '/login',
@@ -47,7 +51,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(store.getters.askForLogin)
 
   if (to.fullPath === '/login') {
     return next();
@@ -55,11 +58,6 @@ router.beforeEach((to, from, next) => {
 
   if (to.meta.requiresAuth) {
     return store.getters.isLogged ? next() : next({name: 'Login'});
-  }
-
-  if (store.getters.askForLogin && to.fullPath !== '/login') {
-    store.commit('SET_ASKED', false);
-    return next({name: 'Login'});
   }
 
   return next();

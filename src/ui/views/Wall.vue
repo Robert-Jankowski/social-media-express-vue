@@ -18,13 +18,18 @@
     },
     setup() {
       const route = useRoute();
-      this.userId = route.params.userId;
-      this.wallType = route.params.wallType;
+      const wallOwnerId = route.params.userId;
+      const wallType = route.params.wallType ?? 'PUBLIC';
+
+      return {
+        wallOwnerId,
+        wallType,
+      }
     },
     data() {
       return ({
         posts: null,
-        dataService: new DataService('https://localhost:8080'),
+        dataService: new DataService(),
         userId: null,
         wallType: null,
       })

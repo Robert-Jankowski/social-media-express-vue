@@ -13,5 +13,7 @@ export const sessionMiddlewareWrapper = ({store, secret}: SessionMiddlewareWrapp
     store: store,
     cookie: {
       maxAge: 1000 * 60 * 60,
-    }
+      secure: false,
+    },
+    unset: "destroy",
   });

@@ -2,17 +2,10 @@ import {POSTS_MOCKS} from "../mocks/posts-mocks";
 import axios from "axios";
 
 export class DataService {
-  axiosSettings = {
+  proxy = {
     withCredentials: true,
   };
-
-
-  constructor (baseUrl) {
-    this.axiosSettings = {
-      ...this.axiosSettings,
-      baseURL: baseUrl + '/api/',
-    };
-  }
+  baseUrl = 'https://localhost:8080/api/';
 
   getWall (userId, wallType) {
     const url = this.buildUrl(`wall/${userId}/${wallType}`);
@@ -22,6 +15,11 @@ export class DataService {
   }
 
   logIn (login, password) {
-    return axios.post('user/login', { login, password }, this.axiosSettings);
+    console.log(this.proxy)
+    return axios.post(this.buildUrl('user/login'), { login, password }, this.proxy);
+  }
+
+  buildUrl(url) {
+    return this.baseUrl + url;
   }
 }

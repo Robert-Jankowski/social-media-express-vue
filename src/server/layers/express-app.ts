@@ -16,7 +16,13 @@ export const expressAppWrapper = ({uiFilesDirectory, sessionMiddleware}: Wrapper
   const app = express();
   app.use(cors({
     credentials: true,
-    exposedHeaders: ["set-cookie"]
+    exposedHeaders: ["set-cookie"],
+    origin: [
+      'http://localhost:8080',
+      'http://localhost:8081', // dev
+      'https://localhost:8080',
+      'https://localhost:8081', // dev
+    ],
   }))
   app.use(express.static(uiFilesDirectory));
   app.use(express.json());
