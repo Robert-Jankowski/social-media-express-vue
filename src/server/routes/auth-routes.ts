@@ -61,7 +61,6 @@ routes.post('/register', async (req: Request, res: Response) => {
       username: username ?? login,
       friends: [],
       friendRequests: [],
-      messages: [],
       posts: [],
     })
 

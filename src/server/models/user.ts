@@ -26,11 +26,6 @@ const userSchema = new Schema<UserDefinition>({
     ref: 'User',
     required: true,
   }],
-  messages: [{
-    type: ObjectId,
-    ref: 'Message',
-    required: true,
-  }],
   posts: [{
     type: ObjectId,
     ref: 'Post',

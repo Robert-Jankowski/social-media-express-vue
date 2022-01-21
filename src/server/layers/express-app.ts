@@ -14,7 +14,10 @@ interface WrapperInput {
 export const expressAppWrapper = ({uiFilesDirectory, sessionMiddleware}: WrapperInput) => {
 
   const app = express();
-  app.use(cors())
+  app.use(cors({
+    credentials: true,
+    exposedHeaders: ["set-cookie"]
+  }))
   app.use(express.static(uiFilesDirectory));
   app.use(express.json());
   app.use(cookieParser());

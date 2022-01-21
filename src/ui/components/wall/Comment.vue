@@ -1,11 +1,11 @@
 <template>
   <li>
-    {{comment}}
+    <h3>{{comment.author.username}}</h3>
+    <span>{{comment.content}}</span>
   </li>
 </template>
 
-<script lang="ts">
-  import Comment from './wall/Comment.vue';
+<script>
   import { defineComponent } from 'vue';
 
   export default defineComponent({
