@@ -8,13 +8,13 @@ import user from "../models/user";
 
 
 // @ts-ignore
-export const verifyUser = async (login: string, password: string, done) => {
+export const verifyUser = async (username: string, password: string, done) => {
 
-  if (isNil(login) || isNil(password)) {
+  if (isNil(username) || isNil(password)) {
     done(null, null);
   }
 
-  const result = await User.findOne({login, password});
+  const result = await User.findOne({username, password});
 
   if (result !== null) {
     done(null, result);

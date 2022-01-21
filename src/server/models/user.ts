@@ -4,10 +4,6 @@ import {UserDefinition} from "../types/model-types";
 const { String, ObjectId } = Schema.Types;
 
 const userSchema = new Schema<UserDefinition>({
-  login: {
-    type: String,
-    required: true,
-  },
   username: {
     type: String,
     required: true,

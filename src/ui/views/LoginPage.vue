@@ -5,6 +5,14 @@
     </template>
     <login-form :registerView="registerView" @onSubmit="handleSubmit">
     </login-form>
+    <n-space justify="center">
+      <n-alert v-if="errorContent"
+               closable
+               title="Error"
+               type="error">
+        {{errorContent}}
+      </n-alert>
+    </n-space>
     <n-space justify="end">
       <n-space vertical>
         <span>register</span>
@@ -18,7 +26,8 @@
   import {defineComponent} from "vue";
   import {DataService} from "../services/DataService";
   import LoginForm from "../components/login/LoginForm";
-  import {NSwitch, NCard, NSpace} from 'naive-ui';
+  import {NSwitch, NCard, NSpace, NAlert } from 'naive-ui';
+  import { loginPageErrorMapper as errorMapper } from "../utils/error-mapper/login-page-error-mapper";
 
   export default defineComponent({
     name: 'LoginPage',
@@ -27,31 +36,38 @@
       NCard,
       NSwitch,
       NSpace,
+      NAlert,
     },
     data() {
       return {
         registerView: false,
         dataService: new DataService(),
+        errorContent: null,
       }
     },
     methods: {
-      handleSubmit({login, password}) {
+      handleSubmit({username, password}) {
         if (this.registerView) {
-          this.dataService.registerUser(login, password)
+          this.dataService.registerUser(username, password)
             .then((res) => {
               this.$store.commit('SET_USER', res.data.user)
               this.$router.push({name: 'MainPage'})
             })
-            .catch(console.log)
+            .catch((error) => {
+              this.errorContent = errorMapper(error);
+            })
           return;
         }
 
-        this.dataService.loginUser(login, password)
+        this.dataService.loginUser(username, password)
           .then((res) => {
             this.$store.commit('SET_USER', res.data.user)
             this.$router.push({name: 'MainPage'})
           })
-          .catch(console.log)
+          .catch((error) => {
+            console.log(error)
+            this.errorContent = errorMapper(error);
+          })
       },
     },
   });
@@ -60,11 +76,16 @@
 <style scoped>
 
   .n-card {
-    width: 800px;
+    width: 750px;
   }
 
   h1 {
     text-align: center;
+  }
+
+  .n-alert {
+    margin-top: 20px;
+    width: 700px;
   }
 
 </style>

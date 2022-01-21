@@ -33,7 +33,7 @@ export const expressAppWrapper = ({uiFilesDirectory, sessionMiddleware}: Wrapper
   app.use(passport.initialize());
   app.use(passport.session());
   passport.use(new passportLocal.Strategy({
-    usernameField: 'login',
+    usernameField: 'username',
     passwordField: 'password',
   }, verifyUser));
   passport.serializeUser(userSerializer);

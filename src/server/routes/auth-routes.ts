@@ -3,6 +3,7 @@ import {isNil} from 'lodash';
 import {ResponseCodes} from "../util/response-codes";
 import {User} from "../models";
 import passport from "passport";
+import {ErrorMessages} from "../types/error-messages";
 
 // COMMON PATH - /user
 
@@ -10,9 +11,9 @@ const routes = Router();
 
 // Method:        POST
 // Summary:       login to account
-// Description:   if login and password are correct then create session for user
+// Description:   if username and password are correct then create session for user
 // Permissions:   anyone
-// Body:          { login, password }
+// Body:          { username, password }
 routes.post(
   '/login',
   passport.authenticate('local', {}), (req, res) => {
@@ -22,7 +23,7 @@ routes.post(
     .send({
       user: {
         // @ts-ignore
-        username: req.user.login,
+        username: req.user.username,
         // @ts-ignore
         id: req.user.id,
     }})
@@ -42,32 +43,34 @@ routes.post('/logout', (req: Request, res: Response) => {
 
 // Method:        POST
 // Summary:       register new account
-// Description:   if login is not occupied create account. if username not provided use login
+// Description:   if username is not occupied create account. if username not provided use login
 // Permissions:   anyone
-// Body:          { login, password, username? }
+// Body:          { username, password,  }
 // Response:      { userId }
 routes.post('/register', async (req: Request, res: Response) => {
 
   try {
 
-    const {login, password, username} = req.body as {
-      login: string;
+    const { password, username } = req.body as {
+      username: string;
       password: string;
-      username?: string;
     }
 
-    if (isNil(login) || isNil(password)) {
-      return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
+    if (isNil(username) || isNil(password)) {
+      return res
+        .status(ResponseCodes.WRONG_BODY_CONTENT)
+        .send(ErrorMessages.WRONG_BODY_CONTENT);
     }
 
-    if (await User.exists({login})) {
-      return res.sendStatus(ResponseCodes.ALREADY_EXIST);
+    if (await User.exists({username})) {
+      return res
+        .status(ResponseCodes.ALREADY_EXIST)
+        .send(ErrorMessages.USER_ALREADY_EXISTS);
     }
 
     const newUser = new User({
-      login,
+      username,
       password,
-      username: username ?? login,
       friends: [],
       friendRequests: [],
       posts: [],
@@ -80,14 +83,14 @@ routes.post('/register', async (req: Request, res: Response) => {
       .send({
         user: {
           id: saved._id,
-          username: saved.login,
+          username: saved.username,
         }
       });
 
   } catch (error) {
     return res
       .status(ResponseCodes.INTERNAL_ERROR)
-      .send()
+      .send(ErrorMessages.INTERNAL_ERROR)
   }
 });
 

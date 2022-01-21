@@ -4,9 +4,9 @@
       :rules="rules"
       ref="formRef">
 
-      <n-form-item label="Login" path="login">
-        <n-input v-model:value="formValue.login"
-                 placeholder="Input login" />
+      <n-form-item label="Username" path="username">
+        <n-input v-model:value="formValue.username"
+                 placeholder="Input username" />
       </n-form-item>
       <n-form-item label="Password" path="password">
         <n-input v-model:value="formValue.password"
@@ -37,14 +37,14 @@
       return {
         formRef,
         formValue: ref({
-          login: '',
+          username: '',
           password: ''
         }),
         size: ref('medium'),
         rules: {
-          name: {
+          username: {
             required: true,
-            message: 'Please input your login',
+            message: 'Please input your username',
             trigger: ['input', 'blur']
           },
           password: {
