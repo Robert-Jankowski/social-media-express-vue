@@ -4,7 +4,7 @@ import {Schema} from "mongoose";
 export interface CommentDefinition {
   content: string;
   author: Schema.Types.ObjectId;
-  comments: Schema.Types.ObjectId[];
+  post: Schema.Types.ObjectId;
 }
 
 export interface PostDefinition {
@@ -12,7 +12,6 @@ export interface PostDefinition {
   content: string;
   type: string,
   author: Schema.Types.ObjectId;
-  comments: Schema.Types.ObjectId[];
 }
 
 export interface UserDefinition {
@@ -21,5 +20,4 @@ export interface UserDefinition {
   friends: Schema.Types.ObjectId[];
   friendRequests: Schema.Types.ObjectId[];
   messages: Schema.Types.ObjectId[];
-  posts: Schema.Types.ObjectId[];
 }

@@ -22,11 +22,6 @@ const userSchema = new Schema<UserDefinition>({
     ref: 'User',
     required: true,
   }],
-  posts: [{
-    type: ObjectId,
-    ref: 'Post',
-    required: true,
-  }],
 });
 
 export default model('User', userSchema);

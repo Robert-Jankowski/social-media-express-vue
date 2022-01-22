@@ -73,7 +73,6 @@ routes.post('/register', async (req: Request, res: Response) => {
       password,
       friends: [],
       friendRequests: [],
-      posts: [],
     })
 
     const saved = await newUser.save();

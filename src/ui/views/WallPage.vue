@@ -8,7 +8,7 @@
       <h1 v-else>My Wall</h1>
     </n-card>
     <n-space vertical>
-      <Post v-for="post in posts" :post="post"></Post>
+      <Post v-for="post in posts" :post="post" :userId="userId"></Post>
     </n-space>
   </n-space>
 </template>
@@ -50,6 +50,7 @@
     },
     created () {
       this.dataService.wall.get(this.wallOwnerUsername, this.isPrivate).then((res) => {
+        console.log(res.data)
         this.posts = res.data;
       }).catch(error => {
         this.displayErrorMessage('An error occurred while fetching this wall.')

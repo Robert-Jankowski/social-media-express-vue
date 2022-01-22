@@ -42,8 +42,7 @@ routes.get('/:username', userAuthorization, async (req: Request, res: Response) 
 
 // Method:        POST
 // Summary:       add new post
-// Description:
-// Permissions:   user/friends
+// Permissions:   logged
 // Body:          {title, content, type}
 // Response:      { postId }
 routes.post('/:userId', async (req: Request, res: Response) => {
@@ -74,26 +73,52 @@ routes.post('/:userId', async (req: Request, res: Response) => {
         .send()
     }
 
-    const newPost = new Post({
+    if (type === PostTypes.PRIVATE || type === PostTypes.PUBLIC) {
+
+      const newPost = new Post({
+        title,
+        content,
+        author: userId,
+        type,
+      });
+
+      await newPost.save();
+
+      return res
+        .status(ResponseCodes.OK)
+        .send({
+          isPrivate: type === PostTypes.PRIVATE,
+        });
+    }
+
+    const privatePost = new Post({
       title,
       content,
       author: userId,
-      comments: [],
-      type,
-    });
+      type: PostTypes.PRIVATE,
+    })
 
-    await newPost.save();
+    const publicPost = new Post({
+      title,
+      content,
+      author: userId,
+      type: PostTypes.PUBLIC,
+    })
+
+    await privatePost.save();
+    await publicPost.save();
 
     return res
       .status(ResponseCodes.OK)
       .send({
-        isPrivate: type === WallTypes.PRIVATE,
+        isPrivate: true, // TODO - think what to do here
       });
+
+
   }
   catch (error) {
     return res
-      .status(ResponseCodes.INTERNAL_ERROR)
-      .send()
+      .sendStatus(ResponseCodes.INTERNAL_ERROR)
   }
 });
 

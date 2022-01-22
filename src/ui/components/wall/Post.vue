@@ -19,7 +19,7 @@
           </template>
           <template #default>
             <n-list bordered>
-              <template v-for="(comment, index) in post.comments">
+              <template v-for="(comment, index) in comments">
                 <Comment :comment="comment"></Comment>
                 <n-divider v-if="index !== numberOfComments - 1"></n-divider>
               </template>
@@ -34,7 +34,7 @@
 <script>
   import {defineComponent} from 'vue';
   import Comment from "./Comment.vue";
-  import {NCard, NList, NDivider, NSpace, NInput, NButton, NCollapse, NCollapseItem } from 'naive-ui';
+  import {NCard, NList, NDivider, NSpace, NInput, NButton, NCollapse, NCollapseItem, useMessage } from 'naive-ui';
   import {DataService} from "../../services/DataService";
 
   export default defineComponent({
@@ -43,24 +43,43 @@
       Comment,
       NCard, NList, NDivider, NSpace, NInput, NButton, NCollapse, NCollapseItem,
     },
+    props: ['post', 'userId'],
+    setup() {
+      const message = useMessage();
+
+      return {
+        displayErrorMessage(msg) {
+          message.error(msg);
+        }
+      }
+    },
     data() {
       return {
         commentToSend: '',
         isLogged: this.$store.getters.isLogged || true,
         dataService: new DataService(),
+        comments: this.post.comments,
+        userId: this.userId,
       }
     },
     computed: {
       numberOfComments() {
-        return this.post.comments.length;
+        return this.comments.length;
       },
     },
     methods: {
       handleSubmit() {
-        this.dataService.post.comment(this.post.id, this.userId)
+        this.dataService.post.comment(this.post.id, this.userId, this.commentToSend).then((res) => {
+          const newComment = res.data;
+          this.comments = [
+            newComment,
+            ...this.comments,
+          ]})
+        .catch((error) => {
+          this.displayErrorMessage('Something gone wrong, your comment was not posted.')
+        })
       }
     },
-    props: ['post', 'userId'],
   })
 </script>
 

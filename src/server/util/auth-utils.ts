@@ -32,10 +32,10 @@ export const userSerializer = (user, done) => {
 export const userDeserializer = async (id, done) => {
   const user = await User
     .findById(id, (err: Error) => {
-      console.log(err);
+
     }).clone()
     .catch((error: Error) => {
-      console.log(error);
+
     });
   return done(null, user);
 }

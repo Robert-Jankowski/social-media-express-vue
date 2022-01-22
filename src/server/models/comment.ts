@@ -13,6 +13,11 @@ const commentSchema = new Schema<CommentDefinition>({
     ref: 'User',
     required: true,
   },
+  post: {
+    type: ObjectId,
+    ref: 'Post',
+    required: true,
+  }
 });
 
 export default model('Comment', commentSchema);

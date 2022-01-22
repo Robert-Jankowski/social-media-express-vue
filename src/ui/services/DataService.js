@@ -39,8 +39,8 @@ export class DataService {
   };
 
   post = {
-    comment: (postId, userId) =>
-      axios.post(this.buildUrl(`wall/${postId}$`), {userId}, this.proxy),
+    comment: (postId, userId, content) =>
+      axios.post(this.buildUrl(`post/${postId}`), {userId, content}, this.proxy),
   }
 
   profile = {

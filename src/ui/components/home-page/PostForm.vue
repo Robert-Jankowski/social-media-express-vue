@@ -30,7 +30,7 @@
 
 <script>
   import { defineComponent, ref } from "vue";
-  import { NForm, NFormItem, NInput, NCard, NButton, NSpace, NSelect } from 'naive-ui';
+  import {NForm, NFormItem, NInput, NCard, NButton, NSpace, NSelect } from 'naive-ui';
   import {isNil} from "lodash";
 
   export default defineComponent({
@@ -41,7 +41,9 @@
     emits: ['onSubmit'],
     props: ['registerView'],
     setup(props, { emit }) {
+
       const formRef = ref(null);
+
       return {
         formRef,
         formValue: ref({
@@ -71,7 +73,6 @@
         handleSubmit (value) {
           formRef.value.validate((errors) => {
             if (errors) {
-              console.log(errors);
               return;
             }
             emit("onSubmit", {...value, type: !isNil(value.type) ? value.type : 'GENERAL'});

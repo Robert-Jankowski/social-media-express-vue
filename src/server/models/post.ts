@@ -21,11 +21,6 @@ const postSchema = new Schema<PostDefinition>({
     ref: 'User',
     required: true,
   },
-  comments: [{
-    type: ObjectId,
-    ref: 'Comment',
-    required: true,
-  }],
 });
 
 export default model('Post', postSchema);

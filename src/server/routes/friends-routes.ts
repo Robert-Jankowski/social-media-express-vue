@@ -92,7 +92,6 @@ routes.post('/:friendUsername/invite', async (req: Request, res: Response) => {
     return res.sendStatus(ResponseCodes.OK);
 
   } catch (error) {
-    console.log(error)
     return res
       .status(ResponseCodes.INTERNAL_ERROR)
       .send()
@@ -192,7 +191,6 @@ routes.post('/:friendUsername/accept', async (req: Request, res: Response) => {
     return res.sendStatus(ResponseCodes.OK);
 
   } catch (error) {
-    console.log(error)
     return res
       .status(ResponseCodes.INTERNAL_ERROR)
       .send()
