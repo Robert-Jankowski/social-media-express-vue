@@ -25,7 +25,7 @@
   import { NSpace, NCard } from 'naive-ui';
 
   export default defineComponent({
-    name: 'Wall',
+    name: 'WallPage',
     components: {
       Post, WallHeaderMenu,
       NSpace, NCard,

@@ -1,7 +1,8 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import LoginPage from '../views/LoginPage.vue';
-import MainPage from '../views/MainPage.vue';
-import Wall from "../views/Wall";
+import HomePage from '../views/HomePage.vue';
+import WallPage from "../views/WallPage";
+import FriendsPage from "../views/FriendsPage";
 
 const routes = [
   {
@@ -13,8 +14,16 @@ const routes = [
   },
   {
     path: '/home',
-    name: 'MainPage',
-    component: MainPage,
+    name: 'HomePage',
+    component: HomePage,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: '/friends',
+    name: 'FriendsPage',
+    component: FriendsPage,
     meta: {
       requiresAuth: false,
     },
@@ -29,8 +38,8 @@ const routes = [
   // },
   {
     path: '/wall/:userId/',
-    name: 'Wall',
-    component: Wall,
+    name: 'WallPage',
+    component: WallPage,
     meta: {
       requiresAuth: false,
     }

@@ -27,7 +27,7 @@
           },
           'Main page'
         ),
-      key: 'main-page',
+      key: 'home-page',
       icon: renderIcon(HomeIcon)
     },
     {

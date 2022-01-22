@@ -3,7 +3,7 @@
     <n-card>
       <template v-if="username" #header>
         <n-space justify="center">
-          <main-page-menu :userId="userId"></main-page-menu>
+          <home-page-menu :userId="userId"></home-page-menu>
         </n-space>
       </template>
       <template #default>
@@ -25,21 +25,17 @@
 
 <script>
   import {defineComponent} from "vue";
-  import MainPageMenu from "../components/main-page/MainPageMenu";
-  import PostForm from "../components/main-page/PostForm";
+  import HomePageMenu from "../components/home-page/HomePageMenu.vue";
+  import PostForm from "../components/home-page/PostForm";
   import {NCard, NMenu, NSpace, NAlert } from 'naive-ui';
-  import {mainPageErrorMapper as errorMapper} from "../utils/error-mapper/main-page-error-mapper";
+  import {homePageErrorMapper as errorMapper} from "../utils/error-mapper/home-page-error-mapper";
   import {DataService} from "../services/DataService";
 
   export default defineComponent({
-    name: 'MainPage',
+    name: 'HomePage',
     components: {
-      PostForm,
-      MainPageMenu,
-      NCard,
-      NMenu,
-      NSpace,
-      NAlert,
+      PostForm, HomePageMenu,
+      NCard, NMenu, NSpace, NAlert,
     },
     data() {
       return {
@@ -54,7 +50,7 @@
         this.dataService.post(value, this.userId)
           .then((res) => {
             // this.$store.commit('SET_USER', res.data.user)
-            // this.$router.push({name: 'MainPage'})
+            // this.$router.push({name: 'HomePage'})
             console.log('success')
           })
           .catch((error) => {

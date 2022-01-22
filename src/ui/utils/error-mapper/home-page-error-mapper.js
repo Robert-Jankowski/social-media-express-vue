@@ -1,5 +1,5 @@
 
-export const mainPageErrorMapper = (error) => {
+export const homePageErrorMapper = (error) => {
   const errorCode = +(error?.response?.status ?? '500');
 
   switch (errorCode) {

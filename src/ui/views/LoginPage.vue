@@ -33,10 +33,7 @@
     name: 'LoginPage',
     components: {
       LoginForm,
-      NCard,
-      NSwitch,
-      NSpace,
-      NAlert,
+      NCard, NSwitch, NSpace, NAlert,
     },
     data() {
       return {
@@ -51,7 +48,7 @@
           this.dataService.registerUser(username, password)
             .then((res) => {
               this.$store.commit('SET_USER', res.data.user)
-              this.$router.push({name: 'MainPage'})
+              this.$router.push({name: 'HomePage'})
             })
             .catch((error) => {
               this.errorContent = errorMapper(error);
@@ -62,7 +59,7 @@
         this.dataService.loginUser(username, password)
           .then((res) => {
             this.$store.commit('SET_USER', res.data.user)
-            this.$router.push({name: 'MainPage'})
+            this.$router.push({name: 'HomePage'})
           })
           .catch((error) => {
             console.log(error)

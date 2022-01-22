@@ -85,7 +85,7 @@
   ]
 
   export default defineComponent({
-    name: 'MainPageMenu',
+    name: 'HomePageMenu',
     components: {
       NMenu,
     },
