@@ -12,21 +12,21 @@ const routes = [
     },
   },
   {
-    path: '/welcome',
+    path: '/home',
     name: 'MainPage',
     component: MainPage,
     meta: {
       requiresAuth: false,
     },
   },
-  {
-    path: '/wall/:userId/private',
-    name: 'Wall',
-    component: Wall,
-    meta: {
-      requiresAuth: true,
-    }
-  },
+  // {
+  //   path: '/wall/:userId/private',
+  //   name: 'Wall',
+  //   component: Wall,
+  //   meta: {
+  //     requiresAuth: true,
+  //   }
+  // },
   {
     path: '/wall/:userId/',
     name: 'Wall',

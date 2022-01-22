@@ -23,6 +23,15 @@ export const POSTS_MOCKS = [
       }],
   },
   {
+    title: 'New post 1',
+    content: 'Lorem ipsum dolor sit amet. Vivamus consectetur tortor consectetur urna mattis, sit amet suscipit urna tempus. In malesuada tincidunt lobortis.',
+    author: {
+      userId: '61e92c38f23a865083bf47ba',
+      username: "Jack Ryan",
+    },
+    comments: [],
+  },
+  {
     title: 'New post 2',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consectetur tortor consectetur urna mattis, sit amet suscipit urna tempus. In malesuada tincidunt lobortis.',
     author: {

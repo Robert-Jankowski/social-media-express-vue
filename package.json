@@ -5,6 +5,7 @@
   "license": "MIT",
   "author": "robert.jankowski",
   "dependencies": {
+    "@vicons/ionicons5": "^0.11.0",
     "axios": "^0.25.0",
     "connect-mongodb-session": "^3.1.1",
     "cookie-parser": "^1.4.6",

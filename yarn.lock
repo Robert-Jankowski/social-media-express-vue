@@ -1327,6 +1327,11 @@
     "@types/node" "*"
     "@types/webidl-conversions" "*"
 
+"@vicons/ionicons5@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@vicons/ionicons5/-/ionicons5-0.11.0.tgz#54185bfa572a09df70094db1954f28bfbf1363ed"
+  integrity sha512-4IWamqtXUsuCdlW6NQc2xyoJ+PUXGMwzSrppQbdVCYg0pjYld89jOfLOIkuTWq8o2XUa+Q1/78jzWBtXMTojNg==
+
 "@vue/babel-helper-vue-jsx-merge-props@^1.2.1":
   version "1.2.1"
   resolved "https://registry.npmjs.org/@vue/babel-helper-vue-jsx-merge-props/-/babel-helper-vue-jsx-merge-props-1.2.1.tgz"

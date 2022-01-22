@@ -22,6 +22,10 @@ export class DataService {
     return axios.post(this.buildUrl('user/register'), { username, password }, this.proxy);
   }
 
+  post ({title, content, type}, userId) {
+    return axios.post(this.buildUrl(`user/${userId}`), { title, content, type }, this.proxy);
+  }
+
   buildUrl(url) {
     return this.baseUrl + url;
   }

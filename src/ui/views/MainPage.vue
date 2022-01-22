@@ -1,17 +1,23 @@
 <template>
   <div>
-    <n-page-header>
-      Hello {{username ?? 'guest'}}
-    </n-page-header>
     <n-card>
-      <template #header>
-
+      <template v-if="username" #header>
+        <n-space justify="center">
+          <main-page-menu :userId="userId"></main-page-menu>
+        </n-space>
       </template>
       <template #default>
-        <div v-if="username">
-          <button @click="goToWall(userId, false)">My public wall</button>
-          <button @click="goToWall(userId, true)">My private wall</button>
-        </div>
+        <h1>Hello {{username ?? 'guest'}}</h1>
+        <h2>What's in your mind today?</h2>
+        <post-form v-if="username" @onSubmit="handleSubmit"></post-form>
+        <n-space justify="center">
+          <n-alert v-if="errorContent"
+                   closable
+                   title="Error"
+                   type="error">
+            {{errorContent}}
+          </n-alert>
+        </n-space>
       </template>
     </n-card>
   </div>
@@ -19,32 +25,59 @@
 
 <script>
   import {defineComponent} from "vue";
-  import Wall from "./Wall.vue";
-  import {NCard, NPageHeader} from 'naive-ui';
+  import MainPageMenu from "../components/main-page/MainPageMenu";
+  import PostForm from "../components/main-page/PostForm";
+  import {NCard, NMenu, NSpace, NAlert } from 'naive-ui';
+  import {mainPageErrorMapper as errorMapper} from "../utils/error-mapper/main-page-error-mapper";
+  import {DataService} from "../services/DataService";
 
   export default defineComponent({
     name: 'MainPage',
     components: {
-      Wall,
+      PostForm,
+      MainPageMenu,
       NCard,
+      NMenu,
+      NSpace,
+      NAlert,
     },
     data() {
       return {
         username: this.$store.getters.username,
         userId: this.$store.getters.userId,
+        dataService: new DataService(),
+        errorContent: null,
       }
     },
     methods: {
-      goToWall(userId, isPrivate) {
-
-        const url = `/wall/${userId}${isPrivate ? '/private' : ''}`;
-
-        this.$router.push(url);
-      },
+      handleSubmit(value) {
+        this.dataService.post(value, this.userId)
+          .then((res) => {
+            // this.$store.commit('SET_USER', res.data.user)
+            // this.$router.push({name: 'MainPage'})
+            console.log('success')
+          })
+          .catch((error) => {
+            this.errorContent = errorMapper(error);
+          })
+      }
     },
   });
 </script>
 
 <style scoped>
+
+  .n-card {
+    width: 750px;
+  }
+
+  h1, h2 {
+    text-align: center;
+  }
+
+  .n-alert {
+    margin-top: 20px;
+    width: 700px;
+  }
 
 </style>
