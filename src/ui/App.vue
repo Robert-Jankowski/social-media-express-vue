@@ -1,8 +1,22 @@
 <template>
   <div class="app-wrapper">
-    <router-view></router-view>
+    <n-message-provider>
+      <router-view></router-view>
+    </n-message-provider>
   </div>
 </template>
+
+<script>
+  import { defineComponent } from 'vue'
+  import {NMessageProvider} from 'naive-ui';
+
+
+  export default defineComponent({
+    components: {
+      NMessageProvider,
+    }
+  })
+</script>
 
 <style lang="scss">
 

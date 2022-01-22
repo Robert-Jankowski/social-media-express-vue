@@ -15,9 +15,10 @@
 
 <script>
   import {defineComponent} from "vue";
-  import { NCard, NSpace } from 'naive-ui';
+  import {NCard, NSpace, useMessage} from 'naive-ui';
   import ProfilePageMenu from "../components/profile/ProfilePageMenu";
   import {useRoute} from "vue-router";
+  import {DataService} from "../services/DataService";
 
   export default defineComponent({
     name: "ProfilePage",
@@ -28,18 +29,32 @@
     },
     setup() {
       const route = useRoute();
-      const profileUsername = route.params.userId;
+      const message = useMessage();
+      const profileUsername = route.params.username;
 
       return {
         profileUsername,
+        displayErrorMessage(msg) {
+          message.error(msg, {duration: 5000});
+        }
       }
     },
     data() {
       return {
         username: this.$store.state?.user?.username,
         userId: this.$store.state?.user?.id,
+        profile: null,
+        dataService: new DataService(),
       }
     },
+    created() {
+      this.dataService.profile.get(this.username).then((res) => {
+        this.profile = res.data;
+      }).catch((error) => {
+        this.displayErrorMessage('An error occurred while fetching this wall.')
+      });
+
+    }
   })
 </script>
 

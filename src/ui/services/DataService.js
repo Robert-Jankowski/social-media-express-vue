@@ -9,15 +9,15 @@ export class DataService {
   baseUrl = 'https://localhost:8080/api/';
 
   wall = {
-    // axios.get(this.buildUrl(`wall/${username}/${wallType}`), this.proxy)
     get: (username, wallType) =>
-      Promise.resolve({data: POSTS_MOCKS}),
+      axios.get(this.buildUrl(`wall/${username}/${wallType}`), this.proxy),
+    // Promise.resolve({data: POSTS_MOCKS}),
   }
 
   friends = {
-    // axios.get(this.buildUrl(`user/${userId}/friends`), this.proxy);
     get: (userId) =>
-      Promise.resolve({data: {friends: FRIENDS_MOCKS, requests: REQUESTS_MOCKS}}),
+      axios.get(this.buildUrl(`user/${userId}/friends`), this.proxy),
+    // Promise.resolve({data: {friends: FRIENDS_MOCKS, requests: REQUESTS_MOCKS}}),
 
     remove: (friendId, userId) =>
       axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}`), this.proxy), // friendId -> friendUsername
@@ -32,7 +32,7 @@ export class DataService {
       axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}/deny`), this.proxy),
   };
 
-  user =  {
+  user = {
     login: (username, password) =>
       axios.post(this.buildUrl('user/login'), {username, password}, this.proxy),
 
@@ -40,12 +40,20 @@ export class DataService {
       axios.post(this.buildUrl('user/register'), {username, password}, this.proxy),
 
     post: ({title, content, type}, userId) =>
-      axios.post(this.buildUrl(`user/${userId}`), {title, content, type}, this.proxy)
+      axios.post(this.buildUrl(`user/${userId}`), {title, content, type}, this.proxy),
   };
 
   post = {
     comment: (postId, userId) =>
       axios.post(this.buildUrl(`wall/${postId}$`), {userId}, this.proxy),
+  }
+
+  profile = {
+    get: (username) =>
+      axios.get(this.buildUrl(`user/${username}`, this.proxy)),
+
+    edit: (userId, newData) =>
+      axios.patch(this.buildUrl(`user/${userId}`), newData, this.proxy),
   }
 
   buildUrl(url) {

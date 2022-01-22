@@ -1,44 +1,47 @@
 <template>
-  <n-card>
-    <template #header>
-      <n-space justify="center">
-        <friends-header-menu :username="username"></friends-header-menu>
-      </n-space>
-      <h2>My friends</h2>
-    </template>
-    <template #default>
-      <n-space justify="center">
-        <n-input v-model:value="userToInvite" placeholder="Friend's username"/>
-        <n-button type="primary" @click="handleInviteFriend">Invite user</n-button>
-      </n-space>
-      <n-space vertical>
-        <n-collapse>
-          <n-collapse-item>
-            <template #header>
-              Friend requests ({{requestsCount}})
-            </template>
-            <template #default>
-              <friends-requests-list @accept="handleAcceptFriend" @deny="handleDenyFriend" :requests="requests"></friends-requests-list>
-            </template>
-          </n-collapse-item>
-          <n-collapse-item>
-            <template #header>
-              Friends ({{friendsCount}})
-            </template>
-            <template #default>
-              <friends-list @remove="handleRemoveFriend" :friends="friends"></friends-list>
-            </template>
-          </n-collapse-item>
-        </n-collapse>
-        <n-alert v-if="errorContent"
-                 closable
-                 title="Error"
-                 type="error">
-          {{errorContent}}
-        </n-alert>
-      </n-space>
-    </template>
-  </n-card>
+    <n-card>
+      <template #header>
+        <n-space justify="center">
+          <friends-header-menu :username="username"></friends-header-menu>
+        </n-space>
+        <h2>My friends</h2>
+      </template>
+      <template #default>
+        <n-space justify="center">
+          <n-input v-model:value="userToInvite" placeholder="Friend's username"/>
+          <n-button type="primary" @click="handleInviteFriend">Invite user</n-button>
+        </n-space>
+        <n-space vertical>
+          <n-collapse>
+            <n-collapse-item>
+              <template #header>
+                Friend requests ({{requestsCount}})
+              </template>
+              <template #default>
+                <friends-requests-list @accept="handleAcceptFriend"
+                                       @deny="handleDenyFriend"
+                                       :requests="requests">
+                </friends-requests-list>
+              </template>
+            </n-collapse-item>
+            <n-collapse-item>
+              <template #header>
+                Friends ({{friendsCount}})
+              </template>
+              <template #default>
+                <friends-list @remove="handleRemoveFriend" :friends="friends"></friends-list>
+              </template>
+            </n-collapse-item>
+          </n-collapse>
+          <n-alert v-if="errorContent"
+                   closable
+                   title="Error"
+                   type="error">
+            {{errorContent}}
+          </n-alert>
+        </n-space>
+      </template>
+    </n-card>
 </template>
 
 <script>
@@ -48,7 +51,10 @@
   import FriendsList from "../components/friends/FriendsList";
   import FriendsRequestsList from "../components/friends/FriendsRequestsList";
   import FriendsHeaderMenu from "../components/friends/FriendsHeaderMenu";
-  import {NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem} from 'naive-ui';
+  import {
+    NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem,
+    useMessage
+  } from 'naive-ui';
   import {friendsPageErrorMapper as errorMapper} from "../utils/error-mapper/friends-page-error-mapper";
   import {DataService} from "../services/DataService";
 
@@ -56,7 +62,15 @@
     name: 'FriendsPage',
     components: {
       PostForm, HomePageMenu, FriendsList, FriendsRequestsList, FriendsHeaderMenu,
-      NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem
+      NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem,
+    },
+    setup() {
+      const message = useMessage();
+      return {
+        displayErrorMessage(msg) {
+          message.error(msg, { duration: 5000 });
+        }
+      }
     },
     data() {
       return {
@@ -128,7 +142,7 @@
         this.friends = res.data.friends;
         this.requests = res.data.requests;
       }).catch(error => {
-        console.log(error)
+        this.displayErrorMessage('An error occurred while fetching your friends.');
       })
     }
   });

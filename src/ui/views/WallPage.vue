@@ -19,7 +19,7 @@
   import { defineComponent } from 'vue';
   import {DataService} from "../services/DataService";
   import { useRoute } from 'vue-router';
-  import { NSpace, NCard } from 'naive-ui';
+  import {NSpace, NCard, useMessage} from 'naive-ui';
 
   export default defineComponent({
     name: 'WallPage',
@@ -30,10 +30,14 @@
     props: ['isPrivate'],
     setup() {
       const route = useRoute();
+      const message = useMessage();
       const wallOwnerUsername = route.params.username;
 
       return {
         wallOwnerUsername,
+        displayErrorMessage(msg) {
+          message.error(msg, {duration: 5000});
+        }
       }
     },
     data() {
@@ -49,7 +53,7 @@
       this.dataService.wall.get(this.wallOwnerUsername, this.isPrivate ? 'PRIVATE' : 'PUBLIC').then((res) => {
         this.posts = res.data;
       }).catch(error => {
-        console.log(error);
+        this.displayErrorMessage('An error occurred while fetching this wall.')
       })
     }
   })
