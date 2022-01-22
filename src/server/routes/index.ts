@@ -9,7 +9,7 @@ const routes = Router();
 routes.use('/user/:userId/friends', friendsRoutes);
 routes.use('/user/', authRoutes);
 routes.use('/user', userRoutes);
-routes.use('/wall/:userId/:wallType', wallRoutes);
+routes.use('/wall/:username', wallRoutes);
 
 
 export default routes;

@@ -1,7 +1,7 @@
-import { createStore } from 'vuex';
+import { Store } from 'vuex';
 import { isNil } from 'lodash';
 
-export default createStore({
+const store = new Store({
   state() {
     return {
       user: null,
@@ -35,3 +35,5 @@ export default createStore({
   modules: {
   }
 })
+
+export default store;

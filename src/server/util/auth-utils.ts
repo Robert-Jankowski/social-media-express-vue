@@ -67,7 +67,7 @@ export const userAuthorization = (req: Request, res: Response, next: NextFunctio
 //   return next();
 // }
 
-export const isFriend = async (userId: ObjectId, friendId: ObjectId): Promise<boolean | undefined> => {
+export const isFriend = async (userId: string, friendId: ObjectId): Promise<boolean | undefined> => {
 
   const user = await User.findById(userId);
 

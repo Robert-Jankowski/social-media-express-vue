@@ -53,7 +53,6 @@
     },
     props: ['username'],
     setup (props, context) {
-      console.log(props.username)
       return {
         activeKey: ref(null),
         menuOptions: menuOptions(props.username),

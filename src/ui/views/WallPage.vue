@@ -1,7 +1,7 @@
 <template>
   <n-space vertical class="wall-container">
     <n-card>
-      <n-space justify="center">
+      <n-space v-if="userId" justify="center">
         <wall-header-menu :username="wallOwnerUsername"></wall-header-menu>
       </n-space>
       <h1 v-if="username !== wallOwnerUsername">{{wallOwnerUsername}}'s Wall</h1>
@@ -48,9 +48,8 @@
         userId: this.$store.state?.user?.id,
       }
     },
-
     created () {
-      this.dataService.wall.get(this.wallOwnerUsername, this.isPrivate ? 'PRIVATE' : 'PUBLIC').then((res) => {
+      this.dataService.wall.get(this.wallOwnerUsername, this.isPrivate).then((res) => {
         this.posts = res.data;
       }).catch(error => {
         this.displayErrorMessage('An error occurred while fetching this wall.')

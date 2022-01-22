@@ -3,24 +3,23 @@ import {userAuthorization} from "../util/auth-utils";
 import {ResponseCodes} from "../util/response-codes";
 import {Post, User} from "../models";
 import {isNil} from 'lodash';
+import {PostTypes, WallTypes} from "../types/enums";
 
 // COMMON PATH - /user
 
 const routes = Router();
 
 // Method:        GET
-// Summary:       get user data
-// Description:
-// Permissions:   user/friends
+// Summary:       get user profile data
 // Response:      { ...userData }
-routes.get('/:id', userAuthorization, async (req: Request, res: Response) => {
+routes.get('/:username', userAuthorization, async (req: Request, res: Response) => {
 
-  const {id: userId} = req.params as {
-    id: string;
+  const { username } = req.params as {
+    username: string;
   };
 
   try {
-    const user = await User.findById(userId);
+    const user = await User.find({username});
 
     if (isNil(user)) {
       return res
@@ -28,10 +27,11 @@ routes.get('/:id', userAuthorization, async (req: Request, res: Response) => {
         .send()
     }
 
+    // TODO - figure out returned data
     return res.status(ResponseCodes.OK).send({
-      username: user.username,
-      friends: user.friends,
-      posts: user.posts,
+      ...{
+        some: 'data',
+      },
     });
   } catch (error) {
     return res
@@ -41,12 +41,12 @@ routes.get('/:id', userAuthorization, async (req: Request, res: Response) => {
 });
 
 // Method:        POST
-// Summary:       add new post (private\public\general)
+// Summary:       add new post
 // Description:
 // Permissions:   user/friends
-// Body:          { postContent, type }
+// Body:          {title, content, type}
 // Response:      { postId }
-routes.post('/:id', async (req: Request, res: Response) => {
+routes.post('/:userId', async (req: Request, res: Response) => {
 
   const {title, content, type} = req.body as {
     title: string;
@@ -54,22 +54,41 @@ routes.post('/:id', async (req: Request, res: Response) => {
     type: string;
   };
 
-  const author = '123';
+  // @ts-ignore
+  const sessionUserId = req?.user?._id?.toString();
+  const userId = req.params?.userId;
+
+  if ( isNil(userId) || isNil(sessionUserId) || sessionUserId !== userId) {
+    return res
+      .status(ResponseCodes.UNAUTHORIZED)
+      .send()
+  }
 
   try {
+
+    const user = await User.findById(userId);
+
+    if (isNil(user)) {
+      return res
+        .status(ResponseCodes.NOT_FOUND)
+        .send()
+    }
+
     const newPost = new Post({
       title,
       content,
-      author: author,
+      author: userId,
       comments: [],
       type,
     });
 
-    const saved = await newPost.save();
+    await newPost.save();
 
     return res
-      .status(ResponseCodes.CREATED)
-      .send(saved);
+      .status(ResponseCodes.OK)
+      .send({
+        isPrivate: type === WallTypes.PRIVATE,
+      });
   }
   catch (error) {
     return res

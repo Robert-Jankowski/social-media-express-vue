@@ -49,9 +49,7 @@
       handleSubmit(value) {
         this.dataService.user.post(value, this.userId)
           .then((res) => {
-            // this.$store.commit('SET_USER', res.data.user)
-            // this.$router.push({name: 'HomePage'})
-            console.log('success')
+            this.$router.push(`/wall/${this.username}${res.data.isPrivate ? '/private' : ''}`)
           })
           .catch((error) => {
             this.errorContent = errorMapper(error);

@@ -1,6 +1,4 @@
-import {POSTS_MOCKS} from "../mocks/posts-mocks";
 import axios from "axios";
-import {FRIENDS_MOCKS, REQUESTS_MOCKS} from "../mocks/friends-mocks";
 
 export class DataService {
   proxy = {
@@ -9,18 +7,15 @@ export class DataService {
   baseUrl = 'https://localhost:8080/api/';
 
   wall = {
-    get: (username, wallType) =>
-      axios.get(this.buildUrl(`wall/${username}/${wallType}`), this.proxy),
-    // Promise.resolve({data: POSTS_MOCKS}),
+    get: (username, isPrivate) =>
+      axios.get(this.buildUrl(`wall/${username}`), {...this.proxy, params: { isPrivate }}),
   }
-
   friends = {
     get: (userId) =>
       axios.get(this.buildUrl(`user/${userId}/friends`), this.proxy),
-    // Promise.resolve({data: {friends: FRIENDS_MOCKS, requests: REQUESTS_MOCKS}}),
 
     remove: (friendId, userId) =>
-      axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}`), this.proxy), // friendId -> friendUsername
+      axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}`), this.proxy),
 
     invite: (friendId, userId) =>
       axios.post(this.buildUrl(`user/${userId}/friends/${friendId}/invite`), this.proxy),

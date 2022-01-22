@@ -1,9 +1,11 @@
 import {createRouter, createWebHistory} from 'vue-router';
+import store from '../store/index';
 import LoginPage from '../views/LoginPage.vue';
 import HomePage from '../views/HomePage.vue';
 import WallPage from "../views/WallPage";
 import FriendsPage from "../views/FriendsPage";
 import ProfilePage from "../views/ProfilePage";
+import {isNil} from "lodash";
 
 const routes = [
   {
@@ -18,7 +20,7 @@ const routes = [
     name: 'HomePage',
     component: HomePage,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     },
   },
   {
@@ -26,7 +28,7 @@ const routes = [
     name: 'ProfilePage',
     component: ProfilePage,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     },
   },
   {
@@ -34,11 +36,11 @@ const routes = [
     name: 'FriendsPage',
     component: FriendsPage,
     meta: {
-      requiresAuth: false,
+      requiresAuth: true,
     },
   },
   {
-    path: '/wall/:username/',
+    path: '/wall/:username',
     name: 'WallPage',
     component: WallPage,
     meta: {
@@ -62,12 +64,16 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 
+  if (to.fullPath === '/login' && store.getters.isLogged) {
+    return next({name: 'HomePage'});
+  }
+
   if (to.fullPath === '/login') {
     return next();
   }
 
   if (to.meta.requiresAuth) {
-    return store.getters.isLogged ? next() : next({name: 'Login'});
+    return !isNil(store.state.user) ? next() : next({name: 'Login'});
   }
 
   return next();

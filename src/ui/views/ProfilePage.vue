@@ -2,9 +2,9 @@
   <n-card>
     <template #header>
       <n-space justify="center">
-        <profile-page-menu :username="profileUsername"></profile-page-menu>
+        <profile-page-menu :username="profileUsername" :isMyPage="isMyPage"></profile-page-menu>
       </n-space>
-      <h2 v-if="username !== profileUsername">{{profileUsername}}'s profile</h2>
+      <h2 v-if="!isMyPage">{{profileUsername}}'s profile</h2>
       <h2 v-else>My profile</h2>
     </template>
     <template #default>
@@ -15,7 +15,7 @@
 
 <script>
   import {defineComponent} from "vue";
-  import {NCard, NSpace, useMessage} from 'naive-ui';
+  import {NCard, NSpace, NButton, useMessage} from 'naive-ui';
   import ProfilePageMenu from "../components/profile/ProfilePageMenu";
   import {useRoute} from "vue-router";
   import {DataService} from "../services/DataService";
@@ -26,6 +26,7 @@
       ProfilePageMenu,
       NCard,
       NSpace,
+      NButton,
     },
     setup() {
       const route = useRoute();
@@ -43,6 +44,7 @@
       return {
         username: this.$store.state?.user?.username,
         userId: this.$store.state?.user?.id,
+        isMyPage: this.$store.state?.user?.username === this.profileUsername,
         profile: null,
         dataService: new DataService(),
       }

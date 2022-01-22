@@ -1,12 +1,12 @@
 import {Request, Response, Router} from 'express';
 import {PostTypes, WallTypes} from "../types/enums";
 import {ResponseCodes} from "../util/response-codes";
-import {Post} from "../models";
-import {omit} from 'lodash';
+import {Post, User} from "../models";
+import {omit, reverse, isNil} from 'lodash';
 import {isFriend} from "../util/auth-utils";
-import {Schema, Types} from 'mongoose'
+import { mongo, Types } from 'mongoose'
 
-// COMMON PATH - /wall/:userId/:wallType
+// COMMON PATH - /wall/:username
 // wallType = 'public' | 'private'
 
 const routes = Router();
@@ -15,33 +15,46 @@ const routes = Router();
 // Summary:       get user wall
 // Description:   if wall is public and user not logged - get wall without comments / if friend - get public or private
 // Permissions:   public - anyone / private - user or friends
+// Query:         { isPrivate: boolean}
 // Response:      { posts }
 routes.get('/', async (req: Request, res: Response) => {
 
-  const {userId, wallType} = req.params as {
-    userId: string;
-    wallType: WallTypes;
+  const { username } = req.params as {
+    username: string;
   };
 
+  const isPrivate = req.query?.isPrivate;
+
   try {
+
+    const user = await User.find({username});
+
+    if(isNil(user)) {
+      return res
+        .status(ResponseCodes.NOT_FOUND)
+        .send();
+    }
+
+    // @ts-ignore
+    const userId = user._id;
 
     // @ts-ignore
     const isAuthenticated = req.isAuthenticated();
 
-    if (wallType === WallTypes.PUBLIC) {
-      const posts = Post.find({author: userId, type: PostTypes.PUBLIC || PostTypes.GENERAL});
+    if (!isPrivate) {
+      const posts = await Post.find({author: userId.toString(), type: PostTypes.PUBLIC || PostTypes.GENERAL});
 
 
       return res.status(ResponseCodes.OK).send(
-        isAuthenticated ? posts : omit(posts, 'comments'));
+        isAuthenticated ? reverse(posts) : omit(reverse(posts), 'comments'));
     }
 
     if (
-      wallType === WallTypes.PRIVATE &&
+      isPrivate &&
       isAuthenticated &&
-      await isFriend(new Schema.Types.ObjectId(userId), req.body.user)) {
-        // TODO - naprawic
-        const posts = Post.find({author: userId, type: PostTypes.PRIVATE || PostTypes.GENERAL});
+      await isFriend(userId, req.body.user)) {
+
+        const posts = Post.find({author: userId.toString(), type: PostTypes.PRIVATE || PostTypes.GENERAL});
 
         return res
           .status(ResponseCodes.OK)

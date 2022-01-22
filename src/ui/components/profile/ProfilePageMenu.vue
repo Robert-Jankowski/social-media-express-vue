@@ -19,81 +19,84 @@
   }
 
   const menuOptions = (username) => [
-    {
-      label: () =>
-        h(
-          RouterLink,
+      {
+        label: () =>
+          h(
+            RouterLink,
+            {
+              to: {
+                path: `/home`
+              }
+            },
+            'Main page'
+          ),
+        key: 'home-page',
+        icon: renderIcon(HomeIcon)
+      },
+      {
+        label: 'Wall',
+        key: 'wall',
+        icon: renderIcon(WallIcon),
+        children: [
           {
-            to: {
-              path: `/home`
-            }
+            label: () =>
+              h(
+                RouterLink,
+                {
+                  to: {
+                    path: `/wall/${username}/private`
+                  }
+                },
+                'Private Wall'
+              ),
+            key: 'private-wall',
+            icon: renderIcon(PrivateWallIcon),
           },
-          'Main page'
-        ),
-      key: 'home-page',
-      icon: renderIcon(HomeIcon)
-    },
-    {
-      label: 'Wall',
-      key: 'wall',
-      icon: renderIcon(WallIcon),
-      children: [
-        {
-          label: () =>
-            h(
-              RouterLink,
-              {
-                to: {
-                  path: `/wall/${username}/private`
-                }
-              },
-              'Private Wall'
-            ),
-          key: 'private-wall',
-          icon: renderIcon(PrivateWallIcon),
-        },
-        {
-          label: () =>
-            h(
-              RouterLink,
-              {
-                to: {
-                  path: `/wall/${username}`
-                }
-              },
-              'Public Wall'
-            ),
-          key: 'public-wall',
-          icon: renderIcon(PublicWallIcon),
-        },
-      ]
-    },
-    {
-      label: () =>
-        h(
-          RouterLink,
           {
-            to: {
-              path: `/friends`
-            }
+            label: () =>
+              h(
+                RouterLink,
+                {
+                  to: {
+                    path: `/wall/${username}`
+                  }
+                },
+                'Public Wall'
+              ),
+            key: 'public-wall',
+            icon: renderIcon(PublicWallIcon),
           },
-          'Friends'
-        ),
-      key: 'friends',
-      icon: renderIcon(PeopleIcon),
-    },
-  ]
+        ]
+      },
+    ];
+
+  const friendsOption = {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            path: `/friends`
+          }
+        },
+        'Friends'
+      ),
+    key: 'friends',
+    icon: renderIcon(PeopleIcon),
+  };
 
   export default defineComponent({
     name: 'ProfilePageMenu',
     components: {
       NMenu,
     },
-    props: ['username'],
+    props: ['username', 'isMyPage'],
     setup (props, context) {
       return {
         activeKey: ref(null),
-        menuOptions: menuOptions(props.username),
+        menuOptions: props.isMyPage ?
+          [...menuOptions(props.username), friendsOption] :
+          menuOptions(props.username),
       }
     }
   })

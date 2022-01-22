@@ -62,7 +62,6 @@
             this.$router.push({name: 'HomePage'})
           })
           .catch((error) => {
-            console.log(error)
             this.errorContent = errorMapper(error);
           })
       },
