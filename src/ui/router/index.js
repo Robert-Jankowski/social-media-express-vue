@@ -3,6 +3,7 @@ import LoginPage from '../views/LoginPage.vue';
 import HomePage from '../views/HomePage.vue';
 import WallPage from "../views/WallPage";
 import FriendsPage from "../views/FriendsPage";
+import ProfilePage from "../views/ProfilePage";
 
 const routes = [
   {
@@ -21,6 +22,14 @@ const routes = [
     },
   },
   {
+    path: '/user/:userId/profile',
+    name: 'ProfilePage',
+    component: ProfilePage,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
     path: '/friends',
     name: 'FriendsPage',
     component: FriendsPage,
@@ -28,14 +37,6 @@ const routes = [
       requiresAuth: false,
     },
   },
-  // {
-  //   path: '/wall/:userId/private',
-  //   name: 'Wall',
-  //   component: Wall,
-  //   meta: {
-  //     requiresAuth: true,
-  //   }
-  // },
   {
     path: '/wall/:userId/',
     name: 'WallPage',

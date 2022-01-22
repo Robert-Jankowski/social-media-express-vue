@@ -1,6 +1,9 @@
 <template>
   <n-card>
     <template #header>
+      <n-space justify="center">
+        <friends-header-menu></friends-header-menu>
+      </n-space>
       <h2>My friends</h2>
     </template>
     <template #default>
@@ -44,6 +47,7 @@
   import PostForm from "../components/home-page/PostForm";
   import FriendsList from "../components/friends/FriendsList";
   import FriendsRequestsList from "../components/friends/FriendsRequestsList";
+  import FriendsHeaderMenu from "../components/friends/FriendsHeaderMenu";
   import {NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem} from 'naive-ui';
   import {friendsPageErrorMapper as errorMapper} from "../utils/error-mapper/friends-page-error-mapper";
   import {DataService} from "../services/DataService";
@@ -51,7 +55,7 @@
   export default defineComponent({
     name: 'FriendsPage',
     components: {
-      PostForm, HomePageMenu, FriendsList, FriendsRequestsList,
+      PostForm, HomePageMenu, FriendsList, FriendsRequestsList, FriendsHeaderMenu,
       NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem
     },
     data() {
@@ -139,6 +143,7 @@
 
   .n-card {
     width: 750px;
+    min-height: 610px;
   }
 
   .n-alert {

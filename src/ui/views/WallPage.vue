@@ -1,14 +1,11 @@
 <template>
   <n-space vertical class="wall-container">
     <n-card>
-      <template #header>
-        <h3>{{wallOwnerId}}'s Wall</h3>
-      </template>
-      <template #default>
-        <n-space justify="center">
-          <wall-header-menu :userId="wallOwnerId"></wall-header-menu>
-        </n-space>
-      </template>
+      <n-space justify="center">
+        <wall-header-menu :userId="wallOwnerId"></wall-header-menu>
+      </n-space>
+      <h2 v-if="userId !== wallOwnerId">{{wallOwnerId}}'s Wall</h2>
+      <h2 v-else>My Wall</h2>
     </n-card>
     <n-space vertical>
       <Post v-for="post in posts" :post="post"></Post>
@@ -30,27 +27,25 @@
       Post, WallHeaderMenu,
       NSpace, NCard,
     },
+    props: ['isPrivate'],
     setup() {
       const route = useRoute();
       const wallOwnerId = route.params.userId;
-      const wallType = route.params.wallType ?? 'PUBLIC';
 
       return {
         wallOwnerId,
-        wallType,
       }
     },
     data() {
       return ({
         posts: null,
         dataService: new DataService(),
-        userId: null,
-        wallType: null,
+        userId: this.$store.state?.user?.id,
       })
     },
 
     created () {
-      this.dataService.getWall(this.userId, this.wallType).then((res) => {
+      this.dataService.getWall(this.userId, this.isPrivate ? 'PRIVATE' : 'PUBLIC').then((res) => {
         this.posts = res.data;
       }).catch(error => {
         console.log(error);
@@ -65,7 +60,7 @@
     margin-bottom: 20px;
   }
 
-  h3 {
+  h2 {
     margin: 0;
     padding: 0;
     text-align: center;

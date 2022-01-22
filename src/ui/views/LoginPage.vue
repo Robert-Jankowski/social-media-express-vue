@@ -74,6 +74,7 @@
 
   .n-card {
     width: 750px;
+    min-height: 610px;
   }
 
   h1 {
