@@ -3,7 +3,7 @@
     <n-card>
       <template v-if="username" #header>
         <n-space justify="center">
-          <home-page-menu :userId="userId"></home-page-menu>
+          <home-page-menu :username="username"></home-page-menu>
         </n-space>
       </template>
       <template #default>
@@ -47,7 +47,7 @@
     },
     methods: {
       handleSubmit(value) {
-        this.dataService.post(value, this.userId)
+        this.dataService.user.post(value, this.userId)
           .then((res) => {
             // this.$store.commit('SET_USER', res.data.user)
             // this.$router.push({name: 'HomePage'})

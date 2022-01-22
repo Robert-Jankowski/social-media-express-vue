@@ -1,12 +1,12 @@
 <template>
   <n-list bordered>
-    <template v-for="(friend, index) in requests">
+    <template v-for="friend in requests">
       <n-list-item>
         <n-space justify="space-between">
-          <h4>{{friend.username}}</h4>
+          <h4>{{friend}}</h4>
           <n-space>
-            <n-button @click="onAccept(friend.id)" strong secondary type="success">Accept</n-button>
-            <n-button @click="onDeny(friend.id)" strong secondary type="error">Deny</n-button>
+            <n-button @click="onAccept(friend)" strong secondary type="success">Accept</n-button>
+            <n-button @click="onDeny(friend)" strong secondary type="error">Deny</n-button>
           </n-space>
         </n-space>
       </n-list-item>

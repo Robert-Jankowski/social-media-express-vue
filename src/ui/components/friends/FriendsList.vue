@@ -1,21 +1,21 @@
 <template>
   <n-list bordered>
-    <template v-for="(friend, index) in friends">
+    <template v-for="friend in friends">
       <n-list-item>
         <n-space justify="space-between">
-          <h4>{{friend.username}}</h4>
+          <h4>{{friend}}</h4>
           <n-space>
-            <router-link :to="`/wall/${friend.id}`">
+            <router-link :to="`/wall/${friend}`">
               <n-button secondary type="primary" ghost bordered>
                 Public board
               </n-button>
             </router-link>
-            <router-link :to="`/wall/${friend.id}/private`">
+            <router-link :to="`/wall/${friend}/private`">
               <n-button secondary type="primary" ghost bordered>
                 Private board
               </n-button>
             </router-link>
-            <n-button @click="onRemove(friend.id)" strong secondary type="error">Remove friend</n-button>
+            <n-button @click="onRemove(friend)" strong secondary type="error">Remove friend</n-button>
           </n-space>
         </n-space>
       </n-list-item>
@@ -35,8 +35,8 @@
       props: ['friends'],
       emits: ['remove'],
       methods: {
-        onRemove(friendId) {
-          this.$emit('remove', friendId);
+        onRemove(friendUsername) {
+          this.$emit('remove', friendUsername);
         }
       },
     })

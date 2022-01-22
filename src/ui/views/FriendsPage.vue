@@ -2,7 +2,7 @@
   <n-card>
     <template #header>
       <n-space justify="center">
-        <friends-header-menu></friends-header-menu>
+        <friends-header-menu :username="username"></friends-header-menu>
       </n-space>
       <h2>My friends</h2>
     </template>
@@ -71,7 +71,7 @@
     },
     methods: {
       handleInviteFriend(value) {
-        this.dataService.inviteFriend(value, this.userId)
+        this.dataService.friends.invite(value, this.userId)
           .then((res) => {
             // this.$store.commit('SET_USER', res.data.user)
             // this.$router.push({name: 'HomePage'})
@@ -82,7 +82,7 @@
           })
       },
       handleRemoveFriend(value) {
-        this.dataService.removeFriend(value, this.userId)
+        this.dataService.friends.remove(value, this.userId)
           .then((res) => {
             // this.$store.commit('SET_USER', res.data.user)
             // this.$router.push({name: 'HomePage'})
@@ -93,7 +93,7 @@
           })
       },
       handleAcceptFriend(value) {
-        this.dataService.acceptFriend(value, this.userId)
+        this.dataService.friends.accept(value, this.userId)
           .then((res) => {
             // this.$store.commit('SET_USER', res.data.user)
             // this.$router.push({name: 'HomePage'})
@@ -104,7 +104,7 @@
           })
       },
       handleDenyFriend(value) {
-        this.dataService.denyFriend(value, this.userId)
+        this.dataService.friends.deny(value, this.userId)
           .then((res) => {
             // this.$store.commit('SET_USER', res.data.user)
             // this.$router.push({name: 'HomePage'})
@@ -124,14 +124,9 @@
       }
     },
     created() {
-      this.dataService.getFriends(this.userId).then((res) => {
-        this.friends = res.data;
-      }).catch(error => {
-        console.log(error)
-      })
-
-      this.dataService.getFriendsRequests(this.userId).then((res) => {
-        this.requests = res.data;
+      this.dataService.friends.get(this.userId).then((res) => {
+        this.friends = res.data.friends;
+        this.requests = res.data.requests;
       }).catch(error => {
         console.log(error)
       })

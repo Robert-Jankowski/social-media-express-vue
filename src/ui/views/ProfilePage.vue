@@ -2,9 +2,9 @@
   <n-card>
     <template #header>
       <n-space justify="center">
-        <profile-page-menu :userId="profileId"></profile-page-menu>
+        <profile-page-menu :username="profileUsername"></profile-page-menu>
       </n-space>
-      <h2 v-if="userId !== profileId">{{profileId}}'s profile</h2>
+      <h2 v-if="username !== profileUsername">{{profileUsername}}'s profile</h2>
       <h2 v-else>My profile</h2>
     </template>
     <template #default>
@@ -28,14 +28,15 @@
     },
     setup() {
       const route = useRoute();
-      const profileId = route.params.userId;
+      const profileUsername = route.params.userId;
 
       return {
-        profileId,
+        profileUsername,
       }
     },
     data() {
       return {
+        username: this.$store.state?.user?.username,
         userId: this.$store.state?.user?.id,
       }
     },

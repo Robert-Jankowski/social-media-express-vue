@@ -18,7 +18,7 @@
     return () => h(NIcon, null, { default: () => h(icon) })
   }
 
-  const menuOptions = (userId) => [
+  const menuOptions = (username) => [
     {
       label: 'My Wall',
       key: 'wall',
@@ -30,7 +30,7 @@
               RouterLink,
               {
                 to: {
-                  path: `/wall/${userId}`
+                  path: `/wall/${username}`
                 }
               },
               'Public Wall'
@@ -44,7 +44,7 @@
               RouterLink,
               {
                 to: {
-                  path: `/wall/${userId}/private`
+                  path: `/wall/${username}/private`
                 }
               },
               'Private Wall'
@@ -60,7 +60,7 @@
           RouterLink,
           {
             to: {
-              path: `/user/${userId}/profile`
+              path: `/user/${username}/profile`
             }
           },
           'My profile'
@@ -89,12 +89,12 @@
     components: {
       NMenu,
     },
-    props: ['userId'],
+    props: ['username'],
     setup (props, context) {
-      console.log(props.userId)
+      console.log(props.username)
       return {
         activeKey: ref(null),
-        menuOptions: menuOptions(props.userId),
+        menuOptions: menuOptions(props.username),
       }
     }
   })

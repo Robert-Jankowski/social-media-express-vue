@@ -45,7 +45,7 @@
     methods: {
       handleSubmit({username, password}) {
         if (this.registerView) {
-          this.dataService.registerUser(username, password)
+          this.dataService.user.register(username, password)
             .then((res) => {
               this.$store.commit('SET_USER', res.data.user)
               this.$router.push({name: 'HomePage'})
@@ -56,7 +56,7 @@
           return;
         }
 
-        this.dataService.loginUser(username, password)
+        this.dataService.user.login(username, password)
           .then((res) => {
             this.$store.commit('SET_USER', res.data.user)
             this.$router.push({name: 'HomePage'})

@@ -1,7 +1,7 @@
 <template>
   <n-list-item>
-    <router-link :to="`/user/${comment.author.userId}/profile`" class="link">
-      <h3>{{comment.author.username}}</h3>
+    <router-link :to="`/user/${comment.author}/profile`" class="link">
+      <h3>{{comment.author}}</h3>
     </router-link>
     <span>{{comment.content}}</span>
   </n-list-item>

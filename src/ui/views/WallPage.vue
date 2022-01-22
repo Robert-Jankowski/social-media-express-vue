@@ -2,9 +2,9 @@
   <n-space vertical class="wall-container">
     <n-card>
       <n-space justify="center">
-        <wall-header-menu :userId="wallOwnerId"></wall-header-menu>
+        <wall-header-menu :username="wallOwnerUsername"></wall-header-menu>
       </n-space>
-      <h1 v-if="userId !== wallOwnerId">{{wallOwnerId}}'s Wall</h1>
+      <h1 v-if="username !== wallOwnerUsername">{{wallOwnerUsername}}'s Wall</h1>
       <h1 v-else>My Wall</h1>
     </n-card>
     <n-space vertical>
@@ -30,22 +30,23 @@
     props: ['isPrivate'],
     setup() {
       const route = useRoute();
-      const wallOwnerId = route.params.userId;
+      const wallOwnerUsername = route.params.username;
 
       return {
-        wallOwnerId,
+        wallOwnerUsername,
       }
     },
     data() {
-      return ({
+      return {
         posts: null,
         dataService: new DataService(),
+        username: this.$store.state?.user?.username,
         userId: this.$store.state?.user?.id,
-      })
+      }
     },
 
     created () {
-      this.dataService.getWall(this.userId, this.isPrivate ? 'PRIVATE' : 'PUBLIC').then((res) => {
+      this.dataService.wall.get(this.wallOwnerUsername, this.isPrivate ? 'PRIVATE' : 'PUBLIC').then((res) => {
         this.posts = res.data;
       }).catch(error => {
         console.log(error);
