@@ -14,17 +14,17 @@ export class DataService {
     get: (userId) =>
       axios.get(this.buildUrl(`user/${userId}/friends`), this.proxy),
 
-    remove: (friendId, userId) =>
-      axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}`), this.proxy),
+    remove: (friendUsername, userId) =>
+      axios.delete(this.buildUrl(`user/${userId}/friends/${friendUsername}`), this.proxy),
 
-    invite: (friendId, userId) =>
-      axios.post(this.buildUrl(`user/${userId}/friends/${friendId}/invite`), this.proxy),
+    invite: (friendUsername, userId) =>
+      axios.post(this.buildUrl(`user/${userId}/friends/${friendUsername}/invite`), this.proxy),
 
-    accept: (friendId, userId) =>
-      axios.post(this.buildUrl(`user/${userId}/friends/${friendId}/accept`), this.proxy),
+    accept: (friendUsername, userId) =>
+      axios.post(this.buildUrl(`user/${userId}/friends/${friendUsername}/accept`), this.proxy),
 
-    deny: (friendId, userId) =>
-      axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}/deny`), this.proxy),
+    deny: (friendUsername, userId) =>
+      axios.delete(this.buildUrl(`user/${userId}/friends/${friendUsername}/deny`), this.proxy),
   };
 
   user = {
