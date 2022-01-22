@@ -6,12 +6,12 @@
           <h4>{{friend}}</h4>
           <n-space>
             <router-link :to="`/wall/${friend}`">
-              <n-button secondary type="primary" ghost bordered>
+              <n-button type="primary" ghost>
                 Public board
               </n-button>
             </router-link>
             <router-link :to="`/wall/${friend}/private`">
-              <n-button secondary type="primary" ghost bordered>
+              <n-button type="primary" ghost>
                 Private board
               </n-button>
             </router-link>

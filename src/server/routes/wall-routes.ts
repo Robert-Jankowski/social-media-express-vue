@@ -9,7 +9,7 @@ import { mongo, Types } from 'mongoose'
 // COMMON PATH - /wall/:username
 // wallType = 'public' | 'private'
 
-const routes = Router();
+const routes = Router({mergeParams: true});
 
 // Method:        GET
 // Summary:       get user wall

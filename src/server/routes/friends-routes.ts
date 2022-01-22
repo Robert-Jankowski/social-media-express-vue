@@ -5,7 +5,7 @@ import {User} from "../models";
 
 // COMMON PATH - /user/userId:/friends/
 
-const routes = Router();
+const routes = Router({mergeParams: true});
 
 
 // Method:        GET
@@ -56,8 +56,7 @@ routes.get('/', async (req: Request, res: Response) => {
 // Summary:       invite friend
 // Description:   add entry to friendRequests, notify person
 // Permissions:   user
-// Response:      { invited: true }
-routes.post('/:friendId/invite', async (req: Request, res: Response) => {
+routes.post('/:friendUsername/invite', async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
@@ -71,10 +70,14 @@ routes.post('/:friendId/invite', async (req: Request, res: Response) => {
   try {
 
     const user = await User.findById(userId);
-    const friend = await User.find({username: friendUsername});
+    const friend = await User.findOne({username: friendUsername});
 
     if (isNil(user) || isNil(friend)) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
+    }
+
+    if (user._id === friend._id) {
+      return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
     }
 
     // @ts-ignore
@@ -82,13 +85,14 @@ routes.post('/:friendId/invite', async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
     // @ts-ignore
-    friend.friendRequests.push({id: friend._id});
+    friend.friendRequests.push(user._id);
     // @ts-ignore
     await friend.save();
 
     return res.sendStatus(ResponseCodes.OK);
 
   } catch (error) {
+    console.log(error)
     return res
       .status(ResponseCodes.INTERNAL_ERROR)
       .send()
@@ -102,7 +106,7 @@ routes.post('/:friendId/invite', async (req: Request, res: Response) => {
 // Description:
 // Permissions:   user
 // Response:      { deleted: true }
-routes.delete('/:friendId', async (req: Request, res: Response) => {
+routes.delete('/:friendUsername', async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
@@ -116,7 +120,7 @@ routes.delete('/:friendId', async (req: Request, res: Response) => {
   try {
 
     const user = await User.findById(userId);
-    const friend = await User.find({username: friendUsername});
+    const friend = await User.findOne({username: friendUsername});
 
     if (isNil(user) || isNil(friend)) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
@@ -127,9 +131,9 @@ routes.delete('/:friendId', async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
     // @ts-ignore
-    user.friends.pull({id: friend._id});
+    user.friends.pull(friend._id);
     // @ts-ignore
-    friend.friends.pull({id: user._id});
+    friend.friends.pull(user._id);
     await user.save();
     // @ts-ignore
     await friend.save();
@@ -150,7 +154,7 @@ routes.delete('/:friendId', async (req: Request, res: Response) => {
 // Description:   remove friendRequest entry, add person to friendList, notify friend
 // Permissions:   user
 // Response:      { approved: true }
-routes.post('/:friendId/approve', async (req: Request, res: Response) => {
+routes.post('/:friendUsername/accept', async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
@@ -164,7 +168,7 @@ routes.post('/:friendId/approve', async (req: Request, res: Response) => {
   try {
 
     const user = await User.findById(userId);
-    const friend = await User.find({username: friendUsername});
+    const friend = await User.findOne({username: friendUsername});
 
     if (isNil(user) || isNil(friend)) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
@@ -175,11 +179,12 @@ routes.post('/:friendId/approve', async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
     // @ts-ignore
-    user.friendsRequests.pull({id: friend._id});
+    user.friendRequests.pull(friend._id);
     // @ts-ignore
     user.friends.push(friend._id);
     // @ts-ignore
     friend.friends.push(user._id);
+
     await user.save();
     // @ts-ignore
     await friend.save();
@@ -187,6 +192,7 @@ routes.post('/:friendId/approve', async (req: Request, res: Response) => {
     return res.sendStatus(ResponseCodes.OK);
 
   } catch (error) {
+    console.log(error)
     return res
       .status(ResponseCodes.INTERNAL_ERROR)
       .send()
@@ -200,7 +206,7 @@ routes.post('/:friendId/approve', async (req: Request, res: Response) => {
 // Description:   remove friendRequest entry
 // Permissions:   user
 // Response:      { denied: true }
-routes.delete('/:friendId/deny', async (req: Request, res: Response) => {
+routes.delete('/:friendUsername/deny', async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
@@ -214,7 +220,7 @@ routes.delete('/:friendId/deny', async (req: Request, res: Response) => {
   try {
 
     const user = await User.findById(userId);
-    const friend = await User.find({username: friendUsername});
+    const friend = await User.findOne({username: friendUsername});
 
     if (isNil(user) || isNil(friend)) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
@@ -225,7 +231,7 @@ routes.delete('/:friendId/deny', async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
     // @ts-ignore
-    user.friendsRequests.pull({id: friend._id});
+    user.friendRequests.pull(friend._id);
     await user.save();
 
     return res.sendStatus(ResponseCodes.OK);

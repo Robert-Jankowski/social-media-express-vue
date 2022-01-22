@@ -18,7 +18,7 @@ const store = new Store({
   },
   getters: {
     isLogged(state) {
-      return !isNil(state.userId);
+      return !isNil(state.user?.id);
     },
     userId(state) {
       return state?.user?.id;

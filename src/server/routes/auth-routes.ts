@@ -7,7 +7,7 @@ import {ErrorMessages} from "../types/error-messages";
 
 // COMMON PATH - /user
 
-const routes = Router();
+const routes = Router({mergeParams: true});
 
 // Method:        POST
 // Summary:       login to account

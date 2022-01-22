@@ -7,7 +7,7 @@ import {PostTypes, WallTypes} from "../types/enums";
 
 // COMMON PATH - /user
 
-const routes = Router();
+const routes = Router({mergeParams: true});
 
 // Method:        GET
 // Summary:       get user profile data

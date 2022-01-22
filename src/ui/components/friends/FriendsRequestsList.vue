@@ -3,7 +3,9 @@
     <template v-for="friend in requests">
       <n-list-item>
         <n-space justify="space-between">
-          <h4>{{friend}}</h4>
+          <router-link :to="`/user/${friend}/profile`" class="link">
+            <h4>{{friend}}</h4>
+          </router-link>
           <n-space>
             <n-button @click="onAccept(friend)" strong secondary type="success">Accept</n-button>
             <n-button @click="onDeny(friend)" strong secondary type="error">Deny</n-button>
@@ -26,19 +28,26 @@
     props: ['requests'],
     emits: ['accept, deny'],
     methods: {
-      onAccept(friendId) {
-        this.$emit('accept', friendId);
+      onAccept(username) {
+        this.$emit('accept', username);
       },
-      onDeny(friendId) {
-        this.$emit('deny', friendId);
+      onDeny(username) {
+        this.$emit('deny', username);
       },
     },
   })
 </script>
 
 <style scoped>
+
   h4 {
     margin: 0;
     padding: 0;
   }
+
+  .link {
+    text-decoration: none;
+    color: black;
+  }
+
 </style>
