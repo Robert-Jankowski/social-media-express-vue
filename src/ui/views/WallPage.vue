@@ -4,8 +4,8 @@
       <n-space justify="center">
         <wall-header-menu :userId="wallOwnerId"></wall-header-menu>
       </n-space>
-      <h2 v-if="userId !== wallOwnerId">{{wallOwnerId}}'s Wall</h2>
-      <h2 v-else>My Wall</h2>
+      <h1 v-if="userId !== wallOwnerId">{{wallOwnerId}}'s Wall</h1>
+      <h1 v-else>My Wall</h1>
     </n-card>
     <n-space vertical>
       <Post v-for="post in posts" :post="post"></Post>
@@ -60,7 +60,7 @@
     margin-bottom: 20px;
   }
 
-  h2 {
+  h1 {
     margin: 0;
     padding: 0;
     text-align: center;

@@ -8,6 +8,7 @@
   import { NIcon, NMenu } from 'naive-ui';
   import {
     HomeSharp as HomeIcon,
+    PeopleSharp as PeopleIcon,
     PersonSharp as PersonIcon,
   } from '@vicons/ionicons5';
 
@@ -43,6 +44,20 @@
         ),
       key: 'user-profile',
       icon: renderIcon(PersonIcon)
+    },
+    {
+      label: () =>
+        h(
+          RouterLink,
+          {
+            to: {
+              path: `/friends`
+            }
+          },
+          'Friends'
+        ),
+      key: 'friends',
+      icon: renderIcon(PeopleIcon),
     },
   ]
 

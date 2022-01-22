@@ -9,9 +9,12 @@ export class DataService {
   baseUrl = 'https://localhost:8080/api/';
 
   getWall (userId, wallType) {
-    // return axios.get(this.buildUrl(`wall/${userId}/${wallType}`), this.proxy);
+    // return axios.get(this.buildUrl(`wall/${userId}/${wallType}`), this.proxy);  // userId -> username
     return Promise.resolve({data: POSTS_MOCKS});
   }
+
+
+  // MERGE INTO ONE --------------------------------------------------------------
 
   getFriends (userId) {
     // return axios.get(this.buildUrl(`user/${userId}/friends`), this.proxy);
@@ -23,20 +26,22 @@ export class DataService {
     return Promise.resolve({data: REQUESTS_MOCKS});
   }
 
+  // -----------------------------------------------------------------------------
+
   removeFriend(friendId, userId) {
-    return axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}`), this.proxy);
+    return axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}`), this.proxy); // friendId -> friendUsername
   }
 
   inviteFriend(friendId, userId) {
-    return axios.post(this.buildUrl(`user/${userId}/friends/${friendId}/invite`), this.proxy);
+    return axios.post(this.buildUrl(`user/${userId}/friends/${friendId}/invite`), this.proxy); // friendId -> friendUsername
   }
 
   acceptFriend(friendId, userId) {
-    return axios.post(this.buildUrl(`user/${userId}/friends/${friendId}/accept`), this.proxy);
+    return axios.post(this.buildUrl(`user/${userId}/friends/${friendId}/accept`), this.proxy); // friendId -> friendUsername
   }
 
   denyFriend(friendId, userId) {
-    return axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}/deny`), this.proxy);
+    return axios.delete(this.buildUrl(`user/${userId}/friends/${friendId}/deny`), this.proxy); // friendId -> friendUsername
   }
 
   loginUser (username, password) {

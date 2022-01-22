@@ -7,8 +7,11 @@
   import { RouterLink } from 'vue-router';
   import { NIcon, NMenu } from 'naive-ui';
   import {
-    HomeSharp as HomeIcon, ListCircleSharp as WallIcon,
-    PersonSharp as PersonIcon, ReaderSharp as PublicWallIcon, ShieldSharp as PrivateWallIcon,
+    HomeSharp as HomeIcon,
+    ListCircleSharp as WallIcon,
+    PeopleSharp as PeopleIcon,
+    ReaderSharp as PublicWallIcon,
+    ShieldSharp as PrivateWallIcon,
   } from '@vicons/ionicons5';
 
   function renderIcon (icon) {
@@ -41,20 +44,6 @@
               RouterLink,
               {
                 to: {
-                  path: `/wall/${userId}`
-                }
-              },
-              'Public Wall'
-            ),
-          key: 'public-wall',
-          icon: renderIcon(PublicWallIcon),
-        },
-        {
-          label: () =>
-            h(
-              RouterLink,
-              {
-                to: {
                   path: `/wall/${userId}/private`
                 }
               },
@@ -63,7 +52,35 @@
           key: 'private-wall',
           icon: renderIcon(PrivateWallIcon),
         },
+        {
+          label: () =>
+            h(
+              RouterLink,
+              {
+                to: {
+                  path: `/wall/${userId}`
+                }
+              },
+              'Public Wall'
+            ),
+          key: 'public-wall',
+          icon: renderIcon(PublicWallIcon),
+        },
       ]
+    },
+    {
+      label: () =>
+        h(
+          RouterLink,
+          {
+            to: {
+              path: `/friends`
+            }
+          },
+          'Friends'
+        ),
+      key: 'friends',
+      icon: renderIcon(PeopleIcon),
     },
   ]
 

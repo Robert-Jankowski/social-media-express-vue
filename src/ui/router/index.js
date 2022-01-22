@@ -22,7 +22,7 @@ const routes = [
     },
   },
   {
-    path: '/user/:userId/profile',
+    path: '/user/:userId/profile', // userId -> username
     name: 'ProfilePage',
     component: ProfilePage,
     meta: {
@@ -38,7 +38,7 @@ const routes = [
     },
   },
   {
-    path: '/wall/:userId/',
+    path: '/wall/:userId/',  // userId -> username
     name: 'WallPage',
     component: WallPage,
     meta: {

@@ -1,6 +1,8 @@
 <template>
   <n-list-item>
-    <h3>{{comment.author.username}}</h3>
+    <router-link :to="`/user/${comment.author.userId}/profile`" class="link">
+      <h3>{{comment.author.username}}</h3>
+    </router-link>
     <span>{{comment.content}}</span>
   </n-list-item>
 </template>
@@ -19,5 +21,10 @@
 </script>
 
 <style scoped>
+
+  .link {
+    text-decoration: none;
+    color: black;
+  }
 
 </style>
