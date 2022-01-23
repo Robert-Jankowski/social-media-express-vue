@@ -5,10 +5,11 @@
         <n-space justify="center">
           <home-page-menu :username="username"></home-page-menu>
         </n-space>
+        <h2>Hello {{username ?? 'guest'}}</h2>
+        <h3>What's in your mind today?</h3>
       </template>
       <template #default>
-        <h1>Hello {{username ?? 'guest'}}</h1>
-        <h2>What's in your mind today?</h2>
+
         <post-form v-if="username" @onSubmit="handleSubmit"></post-form>
         <n-space justify="center">
           <n-alert v-if="errorContent"
@@ -66,8 +67,10 @@
     min-height: 610px;
   }
 
-  h1, h2 {
+  h2, h3 {
     text-align: center;
+    margin: 0;
+    padding: 0;
   }
 
   .n-alert {

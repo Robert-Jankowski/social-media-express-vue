@@ -6,6 +6,16 @@
       </n-space>
       <h1 v-if="username !== wallOwnerUsername">{{wallOwnerUsername}}'s Wall</h1>
       <h1 v-else>My Wall</h1>
+      <n-spin :show="loading">
+          <n-empty v-if="empty" class="empty" description="This wall cannot be fetched">
+            <template #icon>
+              <n-icon>
+                <offline-icon/>
+              </n-icon>
+            </template>
+          </n-empty>
+          <div v-else class="empty-placeholder" :style="(empty || loading) ?{height: '171px'} : {}"/>
+      </n-spin>
     </n-card>
     <n-space vertical>
       <Post v-for="post in posts" :post="post" :userId="userId"></Post>
@@ -19,13 +29,15 @@
   import { defineComponent } from 'vue';
   import {DataService} from "../services/DataService";
   import { useRoute } from 'vue-router';
-  import {NSpace, NCard, useMessage} from 'naive-ui';
+  import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
+  import {NSpace, NCard, useMessage, NSpin, NIcon, NEmpty} from 'naive-ui';
 
   export default defineComponent({
     name: 'WallPage',
     components: {
       Post, WallHeaderMenu,
-      NSpace, NCard,
+      NSpace, NCard, NSpin, NEmpty, NIcon,
+      OfflineIcon,
     },
     props: ['isPrivate'],
     setup() {
@@ -46,13 +58,17 @@
         dataService: new DataService(),
         username: this.$store.state?.user?.username,
         userId: this.$store.state?.user?.id,
+        loading: true,
+        empty: false,
       }
     },
     created () {
       this.dataService.wall.get(this.wallOwnerUsername, this.isPrivate).then((res) => {
-        console.log(res.data)
         this.posts = res.data;
+        this.loading = false;
       }).catch(error => {
+        this.empty = true;
+        this.loading = false;
         this.displayErrorMessage('An error occurred while fetching this wall.')
       })
     }
@@ -73,6 +89,10 @@
 
   .n-card {
     width: 750px;
+  }
+
+  .empty {
+    padding: 50px;
   }
 
 </style>

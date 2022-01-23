@@ -8,14 +8,28 @@
       <h2 v-else>My profile</h2>
     </template>
     <template #default>
-
+      <n-spin :show="loading">
+        <n-space v-if="!empty" justify="center">
+          <span>CONTENT 1</span>
+          <span>CONTENT 2</span>
+          <span>CONTENT 3</span>
+        </n-space>
+      </n-spin>
+      <n-empty v-if="empty" class="empty" description="This profile cannot be fetched">
+        <template #icon>
+          <n-icon>
+            <offline-icon/>
+          </n-icon>
+        </template>
+      </n-empty>
     </template>
   </n-card>
 </template>
 
 <script>
   import {defineComponent} from "vue";
-  import {NCard, NSpace, NButton, useMessage} from 'naive-ui';
+  import {NCard, NSpace, NButton, useMessage, NEmpty, NSpin, NIcon} from 'naive-ui';
+  import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
   import ProfilePageMenu from "../components/profile/ProfilePageMenu";
   import {useRoute} from "vue-router";
   import {DataService} from "../services/DataService";
@@ -27,6 +41,10 @@
       NCard,
       NSpace,
       NButton,
+      NEmpty,
+      NSpin,
+      NIcon,
+      OfflineIcon,
     },
     setup() {
       const route = useRoute();
@@ -47,12 +65,17 @@
         isMyPage: this.$store.state?.user?.username === this.profileUsername,
         profile: null,
         dataService: new DataService(),
+        empty: false,
+        loading: true,
       }
     },
     created() {
       this.dataService.profile.get(this.username).then((res) => {
+        this.loading = false;
         this.profile = res.data;
       }).catch((error) => {
+        this.loading = false;
+        this.empty = true;
         this.displayErrorMessage('An error occurred while fetching this wall.')
       });
 
@@ -71,6 +94,10 @@
     margin: 0;
     padding: 0;
     text-align: center;
+  }
+
+  .empty {
+    padding: 50px;
   }
 
 </style>

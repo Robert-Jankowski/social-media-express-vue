@@ -11,7 +11,8 @@
           <n-input v-model:value="userToInvite" placeholder="Friend's username"/>
           <n-button type="primary" @click="handleInviteFriend">Invite user</n-button>
         </n-space>
-        <n-space vertical>
+        <n-spin :show="loading">
+        <n-space v-if="!empty" vertical>
           <n-collapse>
             <n-collapse-item>
               <template #header>
@@ -40,6 +41,14 @@
             {{errorContent}}
           </n-alert>
         </n-space>
+          <n-empty v-else  class="empty" description="Friends cannot be fetched">
+            <template #icon>
+              <n-icon>
+                <offline-icon/>
+              </n-icon>
+            </template>
+          </n-empty>
+        </n-spin>
       </template>
     </n-card>
 </template>
@@ -52,9 +61,10 @@
   import FriendsRequestsList from "../components/friends/FriendsRequestsList";
   import FriendsHeaderMenu from "../components/friends/FriendsHeaderMenu";
   import {
-    NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem,
+    NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem, NEmpty, NIcon, NSpin,
     useMessage
   } from 'naive-ui';
+  import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5'
   import {friendsPageErrorMapper as errorMapper} from "../utils/error-mapper/friends-page-error-mapper";
   import {DataService} from "../services/DataService";
 
@@ -62,7 +72,8 @@
     name: 'FriendsPage',
     components: {
       PostForm, HomePageMenu, FriendsList, FriendsRequestsList, FriendsHeaderMenu,
-      NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem,
+      NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem, NEmpty, NIcon,NSpin,
+      OfflineIcon,
     },
     setup() {
       const message = useMessage();
@@ -84,6 +95,8 @@
         userToInvite: '',
         dataService: new DataService(),
         errorContent: null,
+        empty: false,
+        loading: true,
       }
     },
     methods: {
@@ -145,7 +158,10 @@
       this.dataService.friends.get(this.userId).then((res) => {
         this.friends = res.data.friends;
         this.requests = res.data.requests;
+        this.loading = false;
       }).catch(error => {
+        this.empty = true;
+        this.loading = false;
         this.displayErrorMessage('An error occurred while fetching your friends.');
       })
     }
@@ -169,5 +185,9 @@
     margin: 0;
     padding: 0;
     text-align: center;
+  }
+
+  .empty {
+    padding: 50px;
   }
 </style>
