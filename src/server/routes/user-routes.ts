@@ -4,6 +4,7 @@ import {ResponseCodes} from "../util/response-codes";
 import {Post, User} from "../models";
 import {isNil} from 'lodash';
 import {PostTypes, WallTypes} from "../types/enums";
+import {UserDefinition} from "../types/model-types";
 
 // COMMON PATH - /user
 
@@ -12,14 +13,15 @@ const routes = Router({mergeParams: true});
 // Method:        GET
 // Summary:       get user profile data
 // Response:      { ...userData }
-routes.get('/:username', userAuthorization, async (req: Request, res: Response) => {
+routes.get('/:username', async (req: Request, res: Response) => {
 
   const { username } = req.params as {
     username: string;
   };
 
   try {
-    const user = await User.find({username});
+    // @ts-ignore
+    const user = await User.findOne({username}) as UserDefinition;
 
     if (isNil(user)) {
       return res
@@ -27,11 +29,13 @@ routes.get('/:username', userAuthorization, async (req: Request, res: Response) 
         .send()
     }
 
-    // TODO - figure out returned data
-    return res.status(ResponseCodes.OK).send({
-      ...{
-        some: 'data',
-      },
+    return res.status(ResponseCodes.OK)
+      .send({
+        username: user.username,
+        description: user.description,
+        status: user.status,
+        realName: user.realName,
+        tags: user.tags,
     });
   } catch (error) {
     return res
@@ -122,16 +126,33 @@ routes.post('/:userId', userAuthorization, async (req: Request, res: Response) =
 // Permissions:   user
 // Body:          { ...userData }
 // Response:      { ...userData }
-routes.patch('/:id', userAuthorization, async (req: Request, res: Response) => {
+routes.put('/:userId', userAuthorization, async (req: Request, res: Response) => {
 
-  const { username, password } = req.body as {
-    username?: string;
-    password?: string;
+  const { realName, status, description, tags } = req.body as {
+    realName: string;
+    status: string;
+    description: string;
+    tags: string[];
   };
 
-  const { id: userId } = req.params as {
-    id: string;
-  };
+  const userId = req.params.userId;
+
+  if (isNil(userId)) {
+    return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
+  }
+
+  const user = await User.findById(userId);
+
+  if (isNil(user)) {
+    return res.sendStatus(ResponseCodes.NOT_FOUND);
+  }
+
+  user.realName = realName;
+  user.status = status;
+  user.description = description;
+  user.tags = tags ?? [];
+
+  await user.save();
 
   return res.send().status(200);
 });

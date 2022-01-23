@@ -22,6 +22,19 @@ const userSchema = new Schema<UserDefinition>({
     ref: 'User',
     required: true,
   }],
+  status: {
+    type: String,
+    required: false,
+  },
+  description: {
+    type: String,
+    required: false,
+  },
+  realName: {
+    type: String,
+    required: false,
+  },
+  tags: [String],
 });
 
 export default model('User', userSchema);

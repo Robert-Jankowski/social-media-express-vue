@@ -6,6 +6,7 @@ import WallPage from "../views/WallPage";
 import FriendsPage from "../views/FriendsPage";
 import ProfilePage from "../views/ProfilePage";
 import {isNil} from "lodash";
+import WrongRoutePage from "../views/WrongRoutePage";
 
 const routes = [
   {
@@ -62,6 +63,14 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: LoginPage,
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'WrongRoutePage',
+    component: WrongRoutePage,
     meta: {
       requiresAuth: false,
     },

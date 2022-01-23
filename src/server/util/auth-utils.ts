@@ -40,11 +40,15 @@ export const userDeserializer = async (id, done) => {
   return done(null, user);
 }
 
-export const userAuthorization = (req: Request, res: Response, next: NextFunction) =>
+export const userAuthorization = (req: Request, res: Response, next: NextFunction) => {
+
   // @ts-ignore
-  req.isAuthenticated() ?
+  return req.isAuthenticated() ?
     next() :
     res.sendStatus(ResponseCodes.UNAUTHORIZED);
+}
+
+
 
 
 export const isFriend = async (userId: ObjectId, friendId: ObjectId): Promise<boolean | undefined> => {

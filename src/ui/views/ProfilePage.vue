@@ -9,10 +9,16 @@
     </template>
     <template #default>
       <n-spin :show="loading">
-        <n-space v-if="!empty" justify="center">
-          <span>CONTENT 1</span>
-          <span>CONTENT 2</span>
-          <span>CONTENT 3</span>
+        <n-space v-if="!empty">
+          <div v-if="!loading && !empty">
+            <profile-form v-if="editing"
+                          class="profile-form"
+                          :user="profile"
+                          @save="onSubmit"
+                          @exit="onEditorExit"></profile-form>
+            <profile-content v-else :user="profile"></profile-content>
+          </div>
+          <div v-else class="empty-placeholder" :style="(empty || loading) ?{height: '171px'} : {}"></div>
         </n-space>
       </n-spin>
       <n-empty v-if="empty" class="empty" description="This profile cannot be fetched">
@@ -23,6 +29,13 @@
         </template>
       </n-empty>
     </template>
+    <template #footer>
+      <n-space justify="end">
+        <n-button v-if="username === profileUsername" strong secondary type="success" size="large"
+                  :disabled="!profile"
+                  @click="onEditButtonClick">Edit info</n-button>
+      </n-space>
+    </template>
   </n-card>
 </template>
 
@@ -31,13 +44,17 @@
   import {NCard, NSpace, NButton, useMessage, NEmpty, NSpin, NIcon} from 'naive-ui';
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
   import ProfilePageMenu from "../components/profile/ProfilePageMenu";
+  import ProfileForm from "../components/profile/ProfileForm";
   import {useRoute} from "vue-router";
   import dataService from "../services/DataService";
+  import ProfileContent from "../components/profile/ProfileContent";
 
   export default defineComponent({
     name: "ProfilePage",
     components: {
       ProfilePageMenu,
+      ProfileContent,
+      ProfileForm,
       NCard,
       NSpace,
       NButton,
@@ -55,6 +72,9 @@
         profileUsername,
         displayErrorMessage(msg) {
           message.error(msg, {duration: 5000});
+        },
+        displayInfoMessage(msg) {
+          message.info(msg, {duration: 5000});
         }
       }
     },
@@ -66,19 +86,39 @@
         profile: null,
         empty: false,
         loading: true,
+        editing: false,
       }
     },
     created() {
-      dataService.profile.get(this.username).then((res) => {
-        this.loading = false;
+      dataService.profile.get(this.profileUsername).then((res) => {
         this.profile = res.data;
+        this.loading = false;
       }).catch((error) => {
         this.loading = false;
         this.empty = true;
-        this.displayErrorMessage('An error occurred while fetching this profile.')
+        this.displayErrorMessage('An error occurred while fetching this profile.');
       });
 
-    }
+    },
+    methods: {
+      onEditButtonClick() {
+        this.editing = true;
+      },
+      onSubmit(value) {
+        dataService.profile.edit(this.userId, value).then((res) => {
+          this.profile = value;
+          this.editing = false;
+          this.displayInfoMessage('Your new profile is amazing!');
+        }).catch((error) => {
+          this.displayErrorMessage('Something went wrong, your amazing profile wasn\'t saved!');
+        })
+        this.editing = false;
+      },
+      onEditorExit(value) {
+        this.profile = value;
+        this.editing = false;
+      }
+    },
   })
 </script>
 
@@ -97,6 +137,11 @@
 
   .empty {
     padding: 50px;
+  }
+
+  .profile-form {
+
+    min-width: 700px;
   }
 
 </style>

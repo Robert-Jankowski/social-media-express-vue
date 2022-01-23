@@ -57,8 +57,7 @@ routes.get('/', userAuthorization, async (req: Request, res: Response) => {
 // Summary:       invite friend
 // Description:   add entry to friendRequests, notify person
 // Permissions:   user
-routes.post('/:friendUsername/invite', userAuthorization, async (req: Request, res: Response) => {
-
+routes.post('/:friendUsername/invite', async (req: Request, res: Response) => {
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
     userId: string;
@@ -83,7 +82,7 @@ routes.post('/:friendUsername/invite', userAuthorization, async (req: Request, r
 
     // @ts-ignore
     if (friend.friendRequests.includes(user._id) || friend.friends.includes(user._id)) {
-      return res.sendStatus(ResponseCodes.NOT_FOUND);
+      return res.sendStatus(ResponseCodes.ALREADY_EXIST);
     }
     // @ts-ignore
     friend.friendRequests.push(user._id);
@@ -154,7 +153,7 @@ routes.delete('/:friendUsername', userAuthorization, async (req: Request, res: R
 // Description:   remove friendRequest entry, add person to friendList, notify friend
 // Permissions:   user
 // Response:      { approved: true }
-routes.post('/:friendUsername/accept', userAuthorization, async (req: Request, res: Response) => {
+routes.post('/:friendUsername/accept', async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;

@@ -5,6 +5,8 @@ export const friendsPageErrorMapper = (error) => {
   switch (errorCode) {
     case 404:
       return 'Are you sure this IDs owner is real?';
+    case 406:
+      return 'You and your friend are already... friends!';
     case 500:
       return 'Uhhhh, that\'s probably some server side issue... don\'t worry, not your fault :)';
     default:

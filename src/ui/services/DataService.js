@@ -48,7 +48,7 @@ class DataService {
       axios.get(this.buildUrl(`user/${username}`, this.proxy)),
 
     edit: (userId, newData) =>
-      axios.patch(this.buildUrl(`user/${userId}`), newData, this.proxy),
+      axios.put(this.buildUrl(`user/${userId}`), newData, this.proxy),
   }
 
   buildUrl(url) {

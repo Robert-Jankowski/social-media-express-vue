@@ -14,7 +14,7 @@
               </n-icon>
             </template>
           </n-empty>
-          <div v-else class="empty-placeholder" :style="(empty || loading) ?{height: '171px'} : {}"/>
+          <div v-else :style="(empty || loading) ?{height: '171px'} : {}"/>
       </n-spin>
     </n-card>
     <n-space vertical>

@@ -20,4 +20,8 @@ export interface UserDefinition {
   friends: Schema.Types.ObjectId[];
   friendRequests: Schema.Types.ObjectId[];
   messages: Schema.Types.ObjectId[];
+  tags: string[];
+  status?: string;
+  description?: string;
+  realName?: string;
 }
