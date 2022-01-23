@@ -24,9 +24,12 @@
       <n-space>
         <n-button size="large"
                   type="primary"
+                  ghost
                   @click.prevent="handleSubmit(formValue)">Save</n-button>
         <n-button size="large"
                   type="error"
+                  ghost
+                  dashed
                   @click.prevent="handleExit()">Discard</n-button>
       </n-space>
     </n-form-item>

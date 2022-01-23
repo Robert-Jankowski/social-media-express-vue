@@ -7,8 +7,8 @@
   import { RouterLink } from 'vue-router';
   import { NIcon, NMenu } from 'naive-ui';
   import {
-    HomeSharp as HomeIcon,
-    PersonSharp as PersonIcon,
+    HomeSharp as HomeIcon, ListCircleSharp as WallIcon, PeopleSharp as PeopleIcon,
+    PersonSharp as PersonIcon, ReaderSharp as PublicWallIcon, ShieldSharp as PrivateWallIcon,
   } from '@vicons/ionicons5';
 
   function renderIcon (icon) {
@@ -44,10 +44,59 @@
       key: 'user-profile',
       icon: renderIcon(PersonIcon)
     },
+    {
+      label: 'My Wall',
+      key: 'wall',
+      icon: renderIcon(WallIcon),
+      children: [
+        {
+          label: () =>
+            h(
+              RouterLink,
+              {
+                to: {
+                  path: `/wall/${username}`
+                }
+              },
+              'Public Wall'
+            ),
+          key: 'public-wall',
+          icon: renderIcon(PublicWallIcon),
+        },
+        {
+          label: () =>
+            h(
+              RouterLink,
+              {
+                to: {
+                  path: `/wall/${username}/private`
+                }
+              },
+              'Private Wall'
+            ),
+          key: 'private-wall',
+          icon: renderIcon(PrivateWallIcon),
+        },
+      ]
+    },
+    {
+      label: () =>
+        h(
+          RouterLink,
+          {
+            to: {
+              path: `/friends`
+            }
+          },
+          'Friends'
+        ),
+      key: 'friends',
+      icon: renderIcon(PeopleIcon),
+    },
   ]
 
   export default defineComponent({
-    name: 'FriendsHeaderMenu',
+    name: 'NavBar',
     components: {
       NMenu,
     },

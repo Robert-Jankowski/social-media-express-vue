@@ -2,7 +2,7 @@
   <n-space vertical class="wall-container">
     <n-card>
       <n-space v-if="userId" justify="center">
-        <wall-header-menu :username="wallOwnerUsername"></wall-header-menu>
+        <nav-bar :username="username"></nav-bar>
       </n-space>
       <h1 v-if="username !== wallOwnerUsername">{{wallOwnerUsername}}'s Wall</h1>
       <h1 v-else>My Wall</h1>
@@ -25,17 +25,17 @@
 
 <script>
   import Post from '../components/wall/Post.vue';
-  import WallHeaderMenu from '../components/wall/WallHeaderMenu';
   import { defineComponent } from 'vue';
   import dataService from "../services/DataService";
   import { useRoute } from 'vue-router';
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
   import {NSpace, NCard, useMessage, NSpin, NIcon, NEmpty} from 'naive-ui';
+  import NavBar from "../components/common/NavBar";
 
   export default defineComponent({
     name: 'WallPage',
     components: {
-      Post, WallHeaderMenu,
+      Post, NavBar,
       NSpace, NCard, NSpin, NEmpty, NIcon,
       OfflineIcon,
     },

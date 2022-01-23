@@ -3,7 +3,7 @@
     <n-card>
       <template v-if="username" #header>
         <n-space justify="center">
-          <home-page-menu :username="username"></home-page-menu>
+          <nav-bar :username="username"></nav-bar>
         </n-space>
         <h2>Hello {{username ?? 'guest'}}</h2>
         <h3>What's in your mind today?</h3>
@@ -26,16 +26,16 @@
 
 <script>
   import {defineComponent} from "vue";
-  import HomePageMenu from "../components/home-page/HomePageMenu.vue";
   import PostForm from "../components/home-page/PostForm";
   import {NCard, NMenu, NSpace, NAlert } from 'naive-ui';
   import {homePageErrorMapper as errorMapper} from "../utils/error-mapper/home-page-error-mapper";
   import dataService from "../services/DataService";
+  import NavBar from "../components/common/NavBar";
 
   export default defineComponent({
     name: 'HomePage',
     components: {
-      PostForm, HomePageMenu,
+      PostForm, NavBar,
       NCard, NMenu, NSpace, NAlert,
     },
     data() {

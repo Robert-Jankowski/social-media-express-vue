@@ -1,5 +1,5 @@
 <template>
-  <n-thing v-if="user.username" class="card">
+  <n-thing v-if="user.username">
     <template #avatar>
       <n-avatar :size="90" v-if="user">
         <n-icon>
@@ -24,13 +24,13 @@
 
 <script>
     import {defineComponent} from 'vue';
-    import {NThing, NIcon, NAvatar, NSpace, NTag, NSkeleton} from 'naive-ui';
+    import {NThing, NIcon, NAvatar, NSpace, NTag} from 'naive-ui';
     import {Person as PersonIcon} from '@vicons/ionicons5';
 
   export default defineComponent({
     name: "ProfileContent",
     components: {
-      NThing, NIcon, NAvatar, NSpace, NTag, NSkeleton,
+      NThing, NIcon, NAvatar, NSpace, NTag,
       PersonIcon,
     },
     props: ['user'],
@@ -38,10 +38,6 @@
 </script>
 
 <style scoped>
-
-  .card {
-    padding: 40px;
-  }
 
   h3 {
     margin: 0;

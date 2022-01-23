@@ -2,7 +2,7 @@
   <n-card>
     <template #header>
       <n-space justify="center">
-        <profile-page-menu :username="profileUsername" :isMyPage="isMyPage"></profile-page-menu>
+        <nav-bar :username="username"></nav-bar>
       </n-space>
       <h2 v-if="!isMyPage">{{profileUsername}}'s profile</h2>
       <h2 v-else>My profile</h2>
@@ -30,10 +30,22 @@
       </n-empty>
     </template>
     <template #footer>
-      <n-space justify="end">
-        <n-button v-if="username === profileUsername" strong secondary type="success" size="large"
-                  :disabled="!profile"
-                  @click="onEditButtonClick">Edit info</n-button>
+      <n-space justify="space-between" v-if="!editing">
+        <n-space>
+          <router-link :to="`/wall/${profileUsername}`">
+            <n-button type="info" ghost size="large"
+                      :disabled="!profile"
+                      @click="onEditButtonClick">Public wall</n-button>
+          </router-link>
+          <router-link :to="`/wall/${profileUsername}/private`">
+            <n-button type="info" ghost size="large"
+                      :disabled="!profile"
+                      @click="onEditButtonClick">Private wall</n-button>
+          </router-link>
+        </n-space>
+          <n-button v-if="username === profileUsername" strong secondary type="success" size="large"
+                    :disabled="!profile"
+                    @click="onEditButtonClick">Edit info</n-button>
       </n-space>
     </template>
   </n-card>
@@ -43,18 +55,18 @@
   import {defineComponent} from "vue";
   import {NCard, NSpace, NButton, useMessage, NEmpty, NSpin, NIcon} from 'naive-ui';
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
-  import ProfilePageMenu from "../components/profile/ProfilePageMenu";
   import ProfileForm from "../components/profile/ProfileForm";
   import {useRoute} from "vue-router";
   import dataService from "../services/DataService";
   import ProfileContent from "../components/profile/ProfileContent";
+  import NavBar from "../components/common/NavBar";
 
   export default defineComponent({
     name: "ProfilePage",
     components: {
-      ProfilePageMenu,
       ProfileContent,
       ProfileForm,
+      NavBar,
       NCard,
       NSpace,
       NButton,
@@ -140,7 +152,6 @@
   }
 
   .profile-form {
-
     min-width: 700px;
   }
 

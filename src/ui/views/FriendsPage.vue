@@ -2,7 +2,7 @@
     <n-card>
       <template #header>
         <n-space justify="center">
-          <friends-header-menu :username="username"></friends-header-menu>
+          <nav-bar :username="username"></nav-bar>
         </n-space>
         <h2>My friends</h2>
       </template>
@@ -55,11 +55,9 @@
 
 <script>
   import {defineComponent} from "vue";
-  import HomePageMenu from "../components/home-page/HomePageMenu.vue";
   import PostForm from "../components/home-page/PostForm";
   import FriendsList from "../components/friends/FriendsList";
   import FriendsRequestsList from "../components/friends/FriendsRequestsList";
-  import FriendsHeaderMenu from "../components/friends/FriendsHeaderMenu";
   import {
     NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem, NEmpty, NIcon, NSpin,
     useMessage
@@ -67,11 +65,12 @@
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5'
   import {friendsPageErrorMapper as errorMapper} from "../utils/error-mapper/friends-page-error-mapper";
   import dataService from "../services/DataService";
+  import NavBar from "../components/common/NavBar";
 
   export default defineComponent({
     name: 'FriendsPage',
     components: {
-      PostForm, HomePageMenu, FriendsList, FriendsRequestsList, FriendsHeaderMenu,
+      PostForm, FriendsList, FriendsRequestsList, NavBar,
       NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem, NEmpty, NIcon,NSpin,
       OfflineIcon,
     },
