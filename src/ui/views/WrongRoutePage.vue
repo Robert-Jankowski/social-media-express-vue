@@ -2,11 +2,12 @@
   <n-card>
       <n-result
         status="404"
-        title="404 Not Found"
-        description="There is no more to see here."
-      >
+        title="Bad route"
+        description="That page does not exist... at least we don't know about it...">
         <template #footer>
-          <n-button>Go back</n-button>
+          <router-link to="/">
+            <n-button>Go back</n-button>
+          </router-link>
         </template>
       </n-result>
   </n-card>
@@ -28,6 +29,6 @@
   .n-card {
     width: 750px;
     height: 610px;
-    justify-content: center;
+    padding: 130px;
   }
 </style>
