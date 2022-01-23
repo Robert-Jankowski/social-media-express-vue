@@ -2,6 +2,7 @@ import {Request, Response, Router} from "express";
 import { isNil } from "lodash";
 import {ResponseCodes} from "../util/response-codes";
 import {Post, User, Comment} from "../models";
+import {userAuthorization} from "../util/auth-utils";
 
 // COMMON PATH - /post/:postId
 
@@ -13,7 +14,7 @@ const routes = Router({mergeParams: true});
 // Permissions:   public - anyone logged / private - user or friends
 // Body:          { commentContent, ? commentKey ? }
 // Response:      { wall }
-routes.post('/', async (req: Request, res: Response) => {
+routes.post('/', userAuthorization, async (req: Request, res: Response) => {
 
   const postId = req.params.postId;
   const userId = req.body.userId;

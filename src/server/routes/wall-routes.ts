@@ -27,24 +27,26 @@ routes.get('/', async (req: Request, res: Response) => {
 
   try {
 
-    const user = await User.findOne({username});
+    const wallOwner = await User.findOne({username});
 
-    if(isNil(user)) {
+    if(isNil(wallOwner)) {
       return res
         .status(ResponseCodes.NOT_FOUND)
         .send();
     }
 
     // @ts-ignore
-    const userId = user._id;
+    const wallOwnerId = wallOwner._id;
+    // @ts-ignore
+    const userId = req?.user?._id;
 
     // @ts-ignore
     const isAuthenticated = req.isAuthenticated();
 
     if (!isPrivate) {
-      const posts = await Post.find({type: PostTypes.PUBLIC, author: userId});
+      const posts = await Post.find({type: PostTypes.PUBLIC, author: wallOwnerId});
       const postsWithComments = await Promise.all(posts.map( async(post) => {
-        const comments = await Comment.find({post: post._id});
+        const comments = await Comment.find({post: post._id}).populate('author');
         return {
           id: post._id,
           title: post.title,
@@ -53,7 +55,8 @@ routes.get('/', async (req: Request, res: Response) => {
           comments: comments
             .map((comment) => ({
               content: comment.content,
-              author: comment.author,
+              // @ts-ignore
+              author: comment.author.username,
             }))
         }}));
 
@@ -61,14 +64,16 @@ routes.get('/', async (req: Request, res: Response) => {
         isAuthenticated ? reverse(postsWithComments) : omit(reverse(postsWithComments), 'comments'));
     }
 
+    const allowed = wallOwnerId.toString() === userId.toString() || await isFriend(userId, wallOwnerId);
+
     if (
       isPrivate &&
       isAuthenticated &&
-      await isFriend(userId, req.body.user)) {
+      allowed) {
 
-      const posts = await Post.find({type: PostTypes.PRIVATE, author: userId});
+      const posts = await Post.find({type: PostTypes.PRIVATE, author: wallOwnerId});
       const postsWithComments = await Promise.all(posts.map( async(post) => {
-        const comments = await Comment.find({post: post._id});
+        const comments = await Comment.find({post: post._id}).populate('author');;
         return {
           id: post._id,
           title: post.title,
@@ -77,7 +82,8 @@ routes.get('/', async (req: Request, res: Response) => {
           comments: comments
             .map((comment) => ({
               content: comment.content,
-              author: comment.author,
+              // @ts-ignore
+              author: comment.author.username,
             }))
         }}));
 
@@ -89,6 +95,7 @@ routes.get('/', async (req: Request, res: Response) => {
     return res.sendStatus(ResponseCodes.UNAUTHORIZED);
 
   } catch (error) {
+    console.log(error)
     return res
       .status(ResponseCodes.INTERNAL_ERROR)
       .send()

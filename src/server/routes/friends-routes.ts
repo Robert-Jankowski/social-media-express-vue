@@ -2,6 +2,7 @@ import {Router, Request, Response} from 'express';
 import {isNil} from 'lodash';
 import {ResponseCodes} from "../util/response-codes";
 import {User} from "../models";
+import {userAuthorization} from "../util/auth-utils";
 
 // COMMON PATH - /user/userId:/friends/
 
@@ -12,7 +13,7 @@ const routes = Router({mergeParams: true});
 // Summary:       get friends and friend requests
 // Permissions:   user
 // Response:      { friends, requests }
-routes.get('/', async (req: Request, res: Response) => {
+routes.get('/', userAuthorization, async (req: Request, res: Response) => {
 
   const {userId} = req.params as {
     userId: string;
@@ -56,7 +57,7 @@ routes.get('/', async (req: Request, res: Response) => {
 // Summary:       invite friend
 // Description:   add entry to friendRequests, notify person
 // Permissions:   user
-routes.post('/:friendUsername/invite', async (req: Request, res: Response) => {
+routes.post('/:friendUsername/invite', userAuthorization, async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
@@ -105,7 +106,7 @@ routes.post('/:friendUsername/invite', async (req: Request, res: Response) => {
 // Description:
 // Permissions:   user
 // Response:      { deleted: true }
-routes.delete('/:friendUsername', async (req: Request, res: Response) => {
+routes.delete('/:friendUsername', userAuthorization, async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
@@ -153,7 +154,7 @@ routes.delete('/:friendUsername', async (req: Request, res: Response) => {
 // Description:   remove friendRequest entry, add person to friendList, notify friend
 // Permissions:   user
 // Response:      { approved: true }
-routes.post('/:friendUsername/accept', async (req: Request, res: Response) => {
+routes.post('/:friendUsername/accept', userAuthorization, async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
@@ -204,7 +205,7 @@ routes.post('/:friendUsername/accept', async (req: Request, res: Response) => {
 // Description:   remove friendRequest entry
 // Permissions:   user
 // Response:      { denied: true }
-routes.delete('/:friendUsername/deny', async (req: Request, res: Response) => {
+routes.delete('/:friendUsername/deny', userAuthorization, async (req: Request, res: Response) => {
 
   const {friendUsername, userId} = req.params as {
     friendUsername: string;

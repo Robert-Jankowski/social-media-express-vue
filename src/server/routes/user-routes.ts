@@ -45,7 +45,7 @@ routes.get('/:username', userAuthorization, async (req: Request, res: Response) 
 // Permissions:   logged
 // Body:          {title, content, type}
 // Response:      { postId }
-routes.post('/:userId', async (req: Request, res: Response) => {
+routes.post('/:userId', userAuthorization, async (req: Request, res: Response) => {
 
   const {title, content, type} = req.body as {
     title: string;
@@ -54,14 +54,7 @@ routes.post('/:userId', async (req: Request, res: Response) => {
   };
 
   // @ts-ignore
-  const sessionUserId = req?.user?._id?.toString();
   const userId = req.params?.userId;
-
-  if ( isNil(userId) || isNil(sessionUserId) || sessionUserId !== userId) {
-    return res
-      .status(ResponseCodes.UNAUTHORIZED)
-      .send()
-  }
 
   try {
 

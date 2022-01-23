@@ -45,7 +45,18 @@ const routes = [
     component: WallPage,
     meta: {
       requiresAuth: false,
-    }
+    },
+  },
+  {
+    path: '/wall/:username/private',
+    name: 'PrivateWallPage',
+    component: WallPage,
+    props: {
+      isPrivate: true,
+    },
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/login',

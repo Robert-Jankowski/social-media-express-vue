@@ -47,33 +47,13 @@ export const userAuthorization = (req: Request, res: Response, next: NextFunctio
     res.sendStatus(ResponseCodes.UNAUTHORIZED);
 
 
-// export const friendAuthorization = async (req: Request, res: Response, next: NextFunction) => {
-//
-//   const targetUserId = req.params.id;
-//   const userId = req.body;
-//   console.log(req.user)
-//
-//   if (isNil(targetUserId) || isNil(userId)) {
-//     return res.sendStatus(ResponseCodes.UNAUTHORIZED);
-//   }
-//
-//   const user = await User.find({_id: userId});
-//   console.log(user)
-//
-//   if(isNil(user)) {
-//     return res.sendStatus(ResponseCodes.UNAUTHORIZED);
-//   }
-//
-//   return next();
-// }
+export const isFriend = async (userId: ObjectId, friendId: ObjectId): Promise<boolean | undefined> => {
 
-export const isFriend = async (userId: string, friendId: ObjectId): Promise<boolean | undefined> => {
+  const friend = await User.findById(friendId);
 
-  const user = await User.findById(userId);
-
-  if (isNil(user)) {
-    return undefined;
+  if (isNil(friend)) {
+    return false;
   }
 
-  return user.friends.includes(friendId);
+  return friend.friends.includes(userId);
 }
