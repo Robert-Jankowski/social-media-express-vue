@@ -36,6 +36,7 @@ routes.get('/:username', async (req: Request, res: Response) => {
         status: user.status,
         realName: user.realName,
         tags: user.tags,
+        imageUrl: user.imageUrl,
     });
   } catch (error) {
     return res
