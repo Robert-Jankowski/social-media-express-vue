@@ -52,16 +52,15 @@ routes.get('/', async (req: Request, res: Response) => {
           title: post.title,
           content: post.content,
           author: post.content,
-          comments: comments
+          comments: isAuthenticated ? comments
             .map((comment) => ({
               content: comment.content,
               // @ts-ignore
               author: comment.author.username,
-            }))
+            })) : [],
         }}));
 
-      return res.status(ResponseCodes.OK).send(
-        isAuthenticated ? reverse(postsWithComments) : omit(reverse(postsWithComments), 'comments'));
+      return res.status(ResponseCodes.OK).send(reverse(postsWithComments));
     }
 
     const allowed = wallOwnerId.toString() === userId.toString() || await isFriend(userId, wallOwnerId);

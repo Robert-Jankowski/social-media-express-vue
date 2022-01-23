@@ -7,7 +7,7 @@
     <template #default>
       <span>{{post.content}}</span>
     </template>
-    <template  v-if="isLogged" #action>
+    <template v-if="userId" #action>
       <n-space vertical align="end">
         <n-input v-model:value="commentToSend" type="textarea" placeholder="Write your comment here!" />
         <n-button type="primary" @click="handleSubmit">Add comment</n-button>
@@ -56,7 +56,6 @@
     data() {
       return {
         commentToSend: '',
-        isLogged: this.$store.getters.isLogged || true,
         comments: this.post.comments,
         userId: this.userId,
       }
