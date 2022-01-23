@@ -1,10 +1,7 @@
 <template>
   <n-thing v-if="user.username">
     <template #avatar>
-      <n-avatar :size="90" v-if="user">
-        <n-icon>
-          <person-icon/>
-        </n-icon>
+      <n-avatar :size="90" :src="user.imageUrl">
       </n-avatar>
     </template>
     <template #header>

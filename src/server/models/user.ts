@@ -34,6 +34,10 @@ const userSchema = new Schema<UserDefinition>({
     type: String,
     required: false,
   },
+  imageUrl: {
+    type: String,
+    required: false,
+  },
   tags: [String],
 });
 

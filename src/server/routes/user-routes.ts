@@ -128,11 +128,12 @@ routes.post('/:userId', userAuthorization, async (req: Request, res: Response) =
 // Response:      { ...userData }
 routes.put('/:userId', userAuthorization, async (req: Request, res: Response) => {
 
-  const { realName, status, description, tags } = req.body as {
+  const { realName, status, description, tags, imageUrl } = req.body as {
     realName: string;
     status: string;
     description: string;
     tags: string[];
+    imageUrl: string;
   };
 
   const userId = req.params.userId;
@@ -151,6 +152,7 @@ routes.put('/:userId', userAuthorization, async (req: Request, res: Response) =>
   user.status = status;
   user.description = description;
   user.tags = tags ?? [];
+  user.imageUrl = imageUrl;
 
   await user.save();
 

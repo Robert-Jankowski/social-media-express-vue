@@ -8,6 +8,10 @@
       <n-input v-model:value="formValue.realName"
                placeholder="Your real name" />
     </n-form-item>
+    <n-form-item label="Profile photo URL" path="imageUrl">
+      <n-input v-model:value="formValue.imageUrl"
+               placeholder="Your image URL" />
+    </n-form-item>
     <n-form-item label="Status" path="status">
       <n-input v-model:value="formValue.status"
                placeholder="Your status" />

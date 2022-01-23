@@ -24,4 +24,5 @@ export interface UserDefinition {
   status?: string;
   description?: string;
   realName?: string;
+  imageUrl?: string;
 }
