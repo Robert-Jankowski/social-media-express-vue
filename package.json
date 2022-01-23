@@ -13,6 +13,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.2",
     "express-session": "^1.17.2",
+    "linkify-html": "^3.0.5",
+    "linkifyjs": "^3.0.5",
     "lodash": "^4.17.21",
     "mongoose": "^6.1.6",
     "naive-ui": "^2.24.1",

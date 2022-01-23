@@ -5,7 +5,7 @@
     </template>
 
     <template #default>
-      <span>{{post.content}}</span>
+      <span v-html="linkifyHtml(post.content)"></span>
     </template>
     <template v-if="userId" #action>
       <n-space vertical align="end">
@@ -36,6 +36,7 @@
   import Comment from "./Comment.vue";
   import {NCard, NList, NDivider, NSpace, NInput, NButton, NCollapse, NCollapseItem, useMessage } from 'naive-ui';
   import dataService from "../../services/DataService";
+  import linkifyHtml from 'linkify-html';
 
   export default defineComponent({
     name: 'Post',
@@ -66,6 +67,7 @@
       },
     },
     methods: {
+      linkifyHtml,
       handleSubmit() {
         dataService.post.comment(this.post.id, this.userId, this.commentToSend).then((res) => {
           const newComment = res.data;
@@ -76,7 +78,7 @@
         .catch((error) => {
           this.displayErrorMessage('Something gone wrong, your comment was not posted.')
         })
-      }
+      },
     },
   })
 </script>
