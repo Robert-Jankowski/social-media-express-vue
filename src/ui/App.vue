@@ -10,7 +10,6 @@
   import { defineComponent } from 'vue'
   import {NMessageProvider} from 'naive-ui';
 
-
   export default defineComponent({
     components: {
       NMessageProvider,

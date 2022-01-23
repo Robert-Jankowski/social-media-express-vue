@@ -24,7 +24,7 @@
 
 <script>
   import {defineComponent} from "vue";
-  import {DataService} from "../services/DataService";
+  import dataService from "../services/DataService";
   import LoginForm from "../components/login/LoginForm";
   import {NSwitch, NCard, NSpace, NAlert } from 'naive-ui';
   import { loginPageErrorMapper as errorMapper } from "../utils/error-mapper/login-page-error-mapper";
@@ -38,14 +38,13 @@
     data() {
       return {
         registerView: false,
-        dataService: new DataService(),
         errorContent: null,
       }
     },
     methods: {
       handleSubmit({username, password}) {
         if (this.registerView) {
-          this.dataService.user.register(username, password)
+          dataService.user.register(username, password)
             .then((res) => {
               this.$store.commit('SET_USER', res.data.user)
               this.$router.push({name: 'HomePage'})
@@ -56,7 +55,7 @@
           return;
         }
 
-        this.dataService.user.login(username, password)
+        dataService.user.login(username, password)
           .then((res) => {
             this.$store.commit('SET_USER', res.data.user)
             this.$router.push({name: 'HomePage'})

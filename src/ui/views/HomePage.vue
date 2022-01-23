@@ -30,7 +30,7 @@
   import PostForm from "../components/home-page/PostForm";
   import {NCard, NMenu, NSpace, NAlert } from 'naive-ui';
   import {homePageErrorMapper as errorMapper} from "../utils/error-mapper/home-page-error-mapper";
-  import {DataService} from "../services/DataService";
+  import dataService from "../services/DataService";
 
   export default defineComponent({
     name: 'HomePage',
@@ -42,13 +42,12 @@
       return {
         username: this.$store.getters.username,
         userId: this.$store.getters.userId,
-        dataService: new DataService(),
         errorContent: null,
       }
     },
     methods: {
       handleSubmit(value) {
-        this.dataService.user.post(value, this.userId)
+        dataService.user.post(value, this.userId)
           .then((res) => {
             this.$router.push(`/wall/${this.username}${res.data.isPrivate ? '/private' : ''}`)
           })

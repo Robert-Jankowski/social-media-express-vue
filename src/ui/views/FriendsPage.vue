@@ -66,7 +66,7 @@
   } from 'naive-ui';
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5'
   import {friendsPageErrorMapper as errorMapper} from "../utils/error-mapper/friends-page-error-mapper";
-  import {DataService} from "../services/DataService";
+  import dataService from "../services/DataService";
 
   export default defineComponent({
     name: 'FriendsPage',
@@ -93,7 +93,6 @@
         friends: null,
         requests: null,
         userToInvite: '',
-        dataService: new DataService(),
         errorContent: null,
         empty: false,
         loading: true,
@@ -106,7 +105,7 @@
           return;
         }
 
-        this.dataService.friends.invite(this.userToInvite, this.userId)
+        dataService.friends.invite(this.userToInvite, this.userId)
           .then((res) => {
             this.displayInfoMessage('Let\'s check out if this user likes you too!');
           })
@@ -115,7 +114,7 @@
           })
       },
       handleRemoveFriend(value) {
-        this.dataService.friends.remove(value, this.userId)
+        dataService.friends.remove(value, this.userId)
           .then((res) => {
             this.displayInfoMessage('You haven\'t liked them anyway.');
             this.friends = this.friends.filter((friend) => friend !== value);
@@ -125,7 +124,7 @@
           })
       },
       handleAcceptFriend(value) {
-        this.dataService.friends.accept(value, this.userId)
+        dataService.friends.accept(value, this.userId)
           .then((res) => {
             this.displayInfoMessage('One more friend to your friends list!');
             this.requests = this.requests.filter((friend) => friend !== value);
@@ -136,7 +135,7 @@
           })
       },
       handleDenyFriend(value) {
-        this.dataService.friends.deny(value, this.userId)
+        dataService.friends.deny(value, this.userId)
           .then((res) => {
             this.displayInfoMessage('You denied friend request. But why?');
             this.requests = this.requests.filter((friend) => friend !== value);
@@ -155,7 +154,7 @@
       }
     },
     created() {
-      this.dataService.friends.get(this.userId).then((res) => {
+      dataService.friends.get(this.userId).then((res) => {
         this.friends = res.data.friends;
         this.requests = res.data.requests;
         this.loading = false;

@@ -32,7 +32,7 @@
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
   import ProfilePageMenu from "../components/profile/ProfilePageMenu";
   import {useRoute} from "vue-router";
-  import {DataService} from "../services/DataService";
+  import dataService from "../services/DataService";
 
   export default defineComponent({
     name: "ProfilePage",
@@ -64,19 +64,18 @@
         userId: this.$store.state?.user?.id,
         isMyPage: this.$store.state?.user?.username === this.profileUsername,
         profile: null,
-        dataService: new DataService(),
         empty: false,
         loading: true,
       }
     },
     created() {
-      this.dataService.profile.get(this.username).then((res) => {
+      dataService.profile.get(this.username).then((res) => {
         this.loading = false;
         this.profile = res.data;
       }).catch((error) => {
         this.loading = false;
         this.empty = true;
-        this.displayErrorMessage('An error occurred while fetching this wall.')
+        this.displayErrorMessage('An error occurred while fetching this profile.')
       });
 
     }

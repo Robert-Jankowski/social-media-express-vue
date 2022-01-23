@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export class DataService {
+class DataService {
   proxy = {
     withCredentials: true,
   };
@@ -55,3 +55,7 @@ export class DataService {
     return this.baseUrl + url;
   }
 }
+
+const serviceInstance = new DataService();
+
+export default serviceInstance;

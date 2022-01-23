@@ -27,7 +27,7 @@
   import Post from '../components/wall/Post.vue';
   import WallHeaderMenu from '../components/wall/WallHeaderMenu';
   import { defineComponent } from 'vue';
-  import {DataService} from "../services/DataService";
+  import dataService from "../services/DataService";
   import { useRoute } from 'vue-router';
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
   import {NSpace, NCard, useMessage, NSpin, NIcon, NEmpty} from 'naive-ui';
@@ -55,7 +55,6 @@
     data() {
       return {
         posts: null,
-        dataService: new DataService(),
         username: this.$store.state?.user?.username,
         userId: this.$store.state?.user?.id,
         loading: true,
@@ -63,7 +62,7 @@
       }
     },
     created () {
-      this.dataService.wall.get(this.wallOwnerUsername, this.isPrivate).then((res) => {
+      dataService.wall.get(this.wallOwnerUsername, this.isPrivate).then((res) => {
         this.posts = res.data;
         this.loading = false;
       }).catch(error => {

@@ -35,7 +35,7 @@
   import {defineComponent} from 'vue';
   import Comment from "./Comment.vue";
   import {NCard, NList, NDivider, NSpace, NInput, NButton, NCollapse, NCollapseItem, useMessage } from 'naive-ui';
-  import {DataService} from "../../services/DataService";
+  import dataService from "../../services/DataService";
 
   export default defineComponent({
     name: 'Post',
@@ -57,7 +57,6 @@
       return {
         commentToSend: '',
         isLogged: this.$store.getters.isLogged || true,
-        dataService: new DataService(),
         comments: this.post.comments,
         userId: this.userId,
       }
@@ -69,7 +68,7 @@
     },
     methods: {
       handleSubmit() {
-        this.dataService.post.comment(this.post.id, this.userId, this.commentToSend).then((res) => {
+        dataService.post.comment(this.post.id, this.userId, this.commentToSend).then((res) => {
           const newComment = res.data;
           this.comments = [
             newComment,

@@ -10,7 +10,7 @@
                 Public board
               </n-button>
             </router-link>
-            <router-link :to="`/private/${friend}`">
+            <router-link :to="`/wall/${friend}/private`">
               <n-button type="primary" ghost>
                 Private board
               </n-button>
