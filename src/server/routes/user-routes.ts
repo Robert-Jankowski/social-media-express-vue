@@ -52,6 +52,8 @@ routes.get('/:username', async (req: Request, res: Response) => {
 // Response:      { postId }
 routes.post('/:userId', userAuthorization, async (req: Request, res: Response) => {
 
+  const io = req.app.get('socketio');
+
   const {title, content, type} = req.body as {
     title: string;
     content: string;
@@ -80,7 +82,15 @@ routes.post('/:userId', userAuthorization, async (req: Request, res: Response) =
         type,
       });
 
-      await newPost.save();
+      const savedPost = await newPost.save();
+
+      io.emit(`wall/${user.username}/${savedPost.type}`, {
+        id: savedPost.id,
+        title: savedPost.title,
+        content: savedPost.content,
+        author: user.username,
+        comments: [],
+      })
 
       return res
         .status(ResponseCodes.OK)
@@ -103,13 +113,29 @@ routes.post('/:userId', userAuthorization, async (req: Request, res: Response) =
       type: PostTypes.PUBLIC,
     })
 
-    await privatePost.save();
-    await publicPost.save();
+    const savedPrivatePost = await privatePost.save();
+    const savedPublicPost = await publicPost.save();
+
+    io.emit(`wall/${user.username}/${savedPrivatePost.type}`, {
+      id: savedPrivatePost.id,
+      title: savedPrivatePost.title,
+      content: savedPrivatePost.content,
+      author: user.username,
+      comments: [],
+    })
+
+    io.emit(`wall/${user.username}/${savedPublicPost.type}`, {
+      id: savedPublicPost.id,
+      title: savedPublicPost.title,
+      content: savedPublicPost.content,
+      author: user.username,
+      comments: [],
+    })
 
     return res
       .status(ResponseCodes.OK)
       .send({
-        isPrivate: true, // TODO - think what to do here
+        isPrivate: true,
       });
 
 

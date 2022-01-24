@@ -1,5 +1,5 @@
 <template>
-  <n-card>
+  <n-card :key="post.id">
     <template #header>
       <h4>{{post.title}}</h4>
     </template>
@@ -70,11 +70,8 @@
       linkifyHtml,
       handleSubmit() {
         dataService.post.comment(this.post.id, this.userId, this.commentToSend).then((res) => {
-          const newComment = res.data;
-          this.comments = [
-            newComment,
-            ...this.comments,
-          ]})
+          console.log('yay')
+        })
         .catch((error) => {
           this.displayErrorMessage('Something gone wrong, your comment was not posted.')
         })

@@ -32,6 +32,12 @@ routes.post('/', userAuthorization, async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
+    const postAuthor = await User.findById(post.author);
+
+    if (isNil(postAuthor)) {
+      return res.sendStatus(ResponseCodes.NOT_FOUND);
+    }
+
     const comment = new Comment({
       content,
       author: user._id,
@@ -39,6 +45,24 @@ routes.post('/', userAuthorization, async (req: Request, res: Response) => {
     })
 
     await comment.save();
+
+    const comments = await Comment.find({post: post._id}).populate('author');
+
+    const io = req.app.get('socketio');
+
+
+    io.emit(`wall/${postAuthor.username}/${post.type}`, {
+      id: post._id,
+      title: post.title,
+      content: post.content,
+      author: postAuthor.username,
+      comments: comments.map((comment) => ({
+        id: comment._id,
+        content: comment.content,
+        // @ts-ignore
+        author: comment.author.username,
+      })),
+    })
 
     return res.status(ResponseCodes.OK).send({
       content: comment.content,

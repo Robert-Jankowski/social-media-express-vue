@@ -1,5 +1,5 @@
 <template>
-  <n-list-item>
+  <n-list-item :key="`${comment.id}`">
     <router-link :to="`/user/${comment.author}/profile`" class="link">
       <h3>{{comment.author}}</h3>
     </router-link>

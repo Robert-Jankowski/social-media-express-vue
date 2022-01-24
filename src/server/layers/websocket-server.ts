@@ -7,16 +7,16 @@ interface WrapperInput {
 
 export const websocketServerWrapper = ({sessionMiddleware}: WrapperInput) => {
 
-  const io = new Server();
+  const io = new Server({
+    cors: {
+      origin: '*',
+    }
+  });
 
   io.use(websocketMiddlewareWrapper(sessionMiddleware));
 
   io.on("connection", socket => {
-
-    console.log('connected');
-
     socket.on('disconnect', () => {
-      console.log('disconnected');
       socket.disconnect();
     });
   });

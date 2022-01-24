@@ -40,6 +40,13 @@ routes.get('/', async (req: Request, res: Response) => {
     // @ts-ignore
     const userId = req?.user?._id;
 
+    if (isNil(userId) && isPrivate) {
+      return res
+        .sendStatus(ResponseCodes.UNAUTHORIZED);
+    }
+
+
+
     // @ts-ignore
     const isAuthenticated = req.isAuthenticated();
 
@@ -51,9 +58,10 @@ routes.get('/', async (req: Request, res: Response) => {
           id: post._id,
           title: post.title,
           content: post.content,
-          author: post.content,
+          author: post.author,
           comments: isAuthenticated ? comments
             .map((comment) => ({
+              id: comment._id,
               content: comment.content,
               // @ts-ignore
               author: comment.author.username,
@@ -63,7 +71,9 @@ routes.get('/', async (req: Request, res: Response) => {
       return res.status(ResponseCodes.OK).send(reverse(postsWithComments));
     }
 
-    const allowed = wallOwnerId.toString() === userId.toString() || await isFriend(userId, wallOwnerId);
+    console.log(wallOwnerId, userId)
+
+    const allowed = wallOwnerId.toString() === userId.toString() && await isFriend(userId, wallOwnerId);
 
     if (
       isPrivate &&
@@ -77,9 +87,10 @@ routes.get('/', async (req: Request, res: Response) => {
           id: post._id,
           title: post.title,
           content: post.content,
-          author: post.content,
+          author: post.author,
           comments: comments
             .map((comment) => ({
+              id: comment._id,
               content: comment.content,
               // @ts-ignore
               author: comment.author.username,

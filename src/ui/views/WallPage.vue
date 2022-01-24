@@ -27,10 +27,12 @@
   import Post from '../components/wall/Post.vue';
   import { defineComponent } from 'vue';
   import dataService from "../services/DataService";
+  import socketService from "../services/WebsocketService";
   import { useRoute } from 'vue-router';
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
   import {NSpace, NCard, useMessage, NSpin, NIcon, NEmpty} from 'naive-ui';
   import NavBar from "../components/common/NavBar";
+  import {getUpdatedPosts} from "../utils/socket-utils/update-posts";
 
   export default defineComponent({
     name: 'WallPage',
@@ -49,7 +51,10 @@
         wallOwnerUsername,
         displayErrorMessage(msg) {
           message.error(msg, {duration: 5000});
-        }
+        },
+        displayInfoMessage(msg) {
+          message.info(msg, {duration: 5000});
+        },
       }
     },
     data() {
@@ -62,6 +67,23 @@
       }
     },
     created () {
+      socketService.connect();
+      socketService.socket.on(`wall/${this.wallOwnerUsername}/${this.isPrivate ? 'PRIVATE' : 'PUBLIC'}`, (post) => {
+        console.log(post)
+        console.log(this.posts)
+        const isNew = !this.posts.map((p) => p.id).includes(post.id);
+        this.displayInfoMessage(isNew ? 'New post!' : 'New message!');
+        if (isNew) {
+          this.posts = [ post, ...this.posts];
+        } else {
+          const newPosts = getUpdatedPosts(this.posts, post);
+          this.posts = [];
+          this.$nextTick(() => {
+            this.posts = [...newPosts];
+          })
+        }
+      });
+
       dataService.wall.get(this.wallOwnerUsername, this.isPrivate).then((res) => {
         this.posts = res.data;
         this.loading = false;
@@ -70,6 +92,10 @@
         this.loading = false;
         this.displayErrorMessage('An error occurred while fetching this wall.')
       })
+    },
+
+    beforeUnmount() {
+      socketService.disconnect()
     }
   })
 </script>
