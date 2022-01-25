@@ -42,6 +42,7 @@
                       :disabled="!profile"
                       @click="onEditButtonClick">Private wall</n-button>
           </router-link>
+          <n-button type="primary" @click="onInvite">Invite user</n-button>
         </n-space>
           <n-button v-if="username === profileUsername" strong secondary type="success" size="large"
                     :disabled="!profile"
@@ -60,6 +61,7 @@
   import dataService from "../services/DataService";
   import ProfileContent from "../components/profile/ProfileContent";
   import NavBar from "../components/common/NavBar";
+  import {friendsPageErrorMapper as errorMapper} from "../utils/error-mapper/friends-page-error-mapper";
 
   export default defineComponent({
     name: "ProfilePage",
@@ -99,11 +101,13 @@
         empty: false,
         loading: true,
         editing: false,
+        canBeInvited: false,
       }
     },
     created() {
       dataService.profile.get(this.profileUsername).then((res) => {
-        this.profile = res.data;
+        this.profile = res.data.profile;
+        this.canBeInvited = true;
         this.loading = false;
       }).catch((error) => {
         this.loading = false;
@@ -129,7 +133,16 @@
       onEditorExit(value) {
         this.profile = value;
         this.editing = false;
-      }
+      },
+      onInvite() {
+        dataService.friends.invite(this.profile.username, this.userId)
+          .then((res) => {
+            this.displayInfoMessage('Let\'s check out if this user likes you too!');
+          })
+          .catch((error) => {
+            this.displayErrorMessage('Something went wrong, you can\'t invite this person right one!');
+          })
+      },
     },
   })
 </script>

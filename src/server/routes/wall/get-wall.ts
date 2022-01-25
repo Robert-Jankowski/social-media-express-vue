@@ -1,9 +1,8 @@
-import {Request, Response} from "express";
-import {Comment, Post, User} from "../../models";
-import {isNil, omit, reverse} from "lodash";
-import {ResponseCodes} from "../../types/response-codes";
-import {PostTypes} from "../../types/enums";
-import {isFriend} from "../../authentication/is-friend-auth";
+import { Request, Response } from 'express';
+import { Comment, Post, User } from '../../models';
+import { isNil, omit, reverse } from 'lodash';
+import { ResponseCodes } from '../../types/response-codes';
+import { PostTypes } from '../../types/post-types';
 
 export const getWallHandler = async (req: Request, res: Response) => {
 
@@ -27,7 +26,7 @@ export const getWallHandler = async (req: Request, res: Response) => {
 
     const posts = await Post.find({type: PostTypes.PUBLIC, author: wallOwnerId});
     const postsWithComments = await Promise.all(posts.map( async(post) => {
-      const comments = await Comment.find({post: post._id}).populate('author');;
+      const comments = await Comment.find({post: post._id}).populate('author');
       return {
         id: post._id,
         title: post.title,

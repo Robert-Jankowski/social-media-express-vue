@@ -1,7 +1,12 @@
 import axios from "axios";
+import 'dotenv/config';
 
 class DataService {
-  baseUrl = 'https://localhost:8080/api/';
+  baseUrl;
+
+  constructor() {
+    this.baseUrl = `https://${process.env.APP_HOST ?? 'localhost'}:${process.env.APP_PORT ?? 8080}/api/`;
+  }
 
   wall = {
     get: (username, isPrivate) =>
@@ -26,10 +31,10 @@ class DataService {
 
   user = {
     login: (username, password) =>
-      axios.post(this.buildUrl('user/login'), {username, password}, this.getProxy()),
+      axios.post(this.buildUrl('user/login'), {username, password}),
 
     register: (username, password) =>
-      axios.post(this.buildUrl('user/register'), {username, password}, this.getProxy()),
+      axios.post(this.buildUrl('user/register'), {username, password}),
 
     post: ({title, content, type}, userId) =>
       axios.post(this.buildUrl(`user/${userId}`), {title, content, type}, this.getProxy()),

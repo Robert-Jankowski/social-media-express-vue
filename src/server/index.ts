@@ -1,14 +1,14 @@
-import express, {Express} from "express";
-import {Server as WebsocketServer} from "socket.io";
-import {Server as HttpsServer} from "https";
-import { ServerOptions } from "https";
-import {Server} from "http";
-import mongoose, {ConnectOptions} from "mongoose";
-import cors from "cors";
-import cookieParser from "cookie-parser";
-import routes from "./routes";
-import https from "https";
-import {AppConfiguration} from "./types/app-configuration";
+import express, {Express} from 'express';
+import {Server as WebsocketServer} from 'socket.io';
+import {Server as HttpsServer} from 'https';
+import { ServerOptions } from 'https';
+import {Server} from 'http';
+import mongoose, {ConnectOptions} from 'mongoose';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import routes from './routes';
+import https from 'https';
+import {AppConfiguration} from './types/app-configuration';
 import CONFIG from './config';
 
 class ServerService {

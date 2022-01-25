@@ -1,9 +1,9 @@
-import {Request, Response} from "express";
-import {Comment, Post, User} from "../../models";
-import {isNil, omit, reverse} from "lodash";
-import {ResponseCodes} from "../../types/response-codes";
-import {PostTypes} from "../../types/enums";
-import {isFriend} from "../../authentication/is-friend-auth";
+import { Request, Response } from 'express';
+import { Comment, Post, User } from '../../models';
+import { isNil, reverse } from 'lodash';
+import { ResponseCodes } from '../../types/response-codes';
+import { PostTypes } from '../../types/post-types';
+import { isFriend } from '../../authentication/is-friend-auth';
 
 export const getPrivateWallHandler = async (req: Request, res: Response) => {
 

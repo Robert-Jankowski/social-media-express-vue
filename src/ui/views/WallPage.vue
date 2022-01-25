@@ -7,7 +7,9 @@
       <h1 v-if="username !== wallOwnerUsername">{{wallOwnerUsername}}'s Wall</h1>
       <h1 v-else>My Wall</h1>
       <n-spin :show="loading">
-          <n-empty v-if="empty" class="empty" description="This wall cannot be fetched">
+          <n-empty v-if="empty"
+                   class="empty"
+                   description="This wall cannot be loaded. It's possible that you are not allowed to see it.">
             <template #icon>
               <n-icon>
                 <offline-icon/>

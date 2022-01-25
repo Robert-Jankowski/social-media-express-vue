@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import {Post, User} from "../../models";
 import {isNil} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
-import {PostTypes} from "../../types/enums";
+import {PostTypes} from "../../types/post-types";
 
 export const addPostHandler = async (req: Request, res: Response) => {
 

@@ -1,6 +1,6 @@
-import {ConnectOptions} from "mongoose";
-import {SignOptions} from "jsonwebtoken";
-import {ServerOptions} from "https";
+import {ConnectOptions} from 'mongoose';
+import {SignOptions} from 'jsonwebtoken';
+import {ServerOptions} from 'https';
 
 export interface AppConfiguration {
   MONGO_PORT: string;

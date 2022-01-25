@@ -12,22 +12,40 @@ export const getProfileHandler = async (req: Request, res: Response) => {
 
   try {
     // @ts-ignore
-    const user = await User.findOne({username}) as UserDefinition;
+    const profileOwner = await User.findOne({username}) as UserDefinition;
 
-    if (isNil(user)) {
+    if (isNil(profileOwner)) {
       return res
         .status(ResponseCodes.NOT_FOUND)
         .send()
     }
 
+    let canBeInvited = false;
+
+    // @ts-ignore
+    if(isNil(req.user)) {
+      // @ts-ignore
+      const user = await User.findById(req.user.id);
+
+      if(!isNil(user)) {
+        canBeInvited = !user.friends
+          .map((friend) => friend.toString())
+          // @ts-ignore
+          .includes(profileOwner._id);
+      }
+    }
+
     return res.status(ResponseCodes.OK)
       .send({
-        username: user.username,
-        description: user.description,
-        status: user.status,
-        realName: user.realName,
-        tags: user.tags,
-        imageUrl: user.imageUrl,
+        profile: {
+          username: profileOwner.username,
+          description: profileOwner.description,
+          status: profileOwner.status,
+          realName: profileOwner.realName,
+          tags: profileOwner.tags,
+          imageUrl: profileOwner.imageUrl,
+        },
+        canBeInvited,
       });
   } catch (error) {
     return res
