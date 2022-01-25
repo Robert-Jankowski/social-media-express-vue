@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import {UserDefinition} from "../types/model-types";
+import {UserDefinition} from "../types/model-definitions";
 
 const { String, ObjectId } = Schema.Types;
 

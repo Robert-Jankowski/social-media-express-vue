@@ -28,6 +28,7 @@
   import LoginForm from "../components/login/LoginForm";
   import {NSwitch, NCard, NSpace, NAlert } from 'naive-ui';
   import { loginPageErrorMapper as errorMapper } from "../utils/error-mapper/login-page-error-mapper";
+  import axios from "axios";
 
   export default defineComponent({
     name: 'LoginPage',
@@ -46,6 +47,7 @@
         if (this.registerView) {
           dataService.user.register(username, password)
             .then((res) => {
+              sessionStorage.setItem('microwall-jwt', res.data.token);
               this.$store.commit('SET_USER', res.data.user)
               this.$router.push({name: 'HomePage'})
             })
@@ -57,6 +59,7 @@
 
         dataService.user.login(username, password)
           .then((res) => {
+            sessionStorage.setItem('microwall-jwt', res.data.token);
             this.$store.commit('SET_USER', res.data.user)
             this.$router.push({name: 'HomePage'})
           })

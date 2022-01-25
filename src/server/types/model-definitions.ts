@@ -1,6 +1,5 @@
 import {Schema} from "mongoose";
 
-// MODEL INTERFACES
 export interface CommentDefinition {
   content: string;
   author: Schema.Types.ObjectId;

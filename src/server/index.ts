@@ -1,51 +1,101 @@
-import {Express, RequestHandler} from "express";
-import {expressAppWrapper, httpsServerWrapper, mongoStoreWrapper, websocketServerWrapper} from "./layers";
-import {sessionMiddlewareWrapper} from "./middleware";
+import express, {Express} from "express";
 import {Server as WebsocketServer} from "socket.io";
 import {Server as HttpsServer} from "https";
-import CONFIG from "./config";
+import { ServerOptions } from "https";
 import {Server} from "http";
-import mongoose from "mongoose";
+import mongoose, {ConnectOptions} from "mongoose";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import routes from "./routes";
+import https from "https";
+import {AppConfiguration} from "./types/app-configuration";
+import CONFIG from './config';
 
-mongoose
-  .connect(
-    `mongodb://${CONFIG.MONGO_HOST}:${CONFIG.MONGO_PORT}/${CONFIG.MONGO_DB_NAME}`,
-    CONFIG.MONGO_OPTIONS,
-    (_) => {
-      console.log("Connected to mongoDB: " + `mongodb://${CONFIG.MONGO_HOST}:${CONFIG.MONGO_PORT}/${CONFIG.MONGO_DB_NAME}`);
-    })
+class ServerService {
 
-// MONGO STORE
-const mongoStore = mongoStoreWrapper({
-  port: CONFIG.MONGO_PORT,
-  host: CONFIG.MONGO_HOST,
-  dbName: CONFIG.MONGO_DB_NAME,
-})
+  private readonly config: AppConfiguration;
+  private readonly app: Express;
+  private readonly server: HttpsServer;
+  private readonly io: WebsocketServer;
 
-// MIDDLEWARE SESJI
-const sessionMiddleware: RequestHandler = sessionMiddlewareWrapper({
-  store: mongoStore,
-  secret: CONFIG.SESSION_OPTIONS.SECRET,
-});
+  constructor(config: AppConfiguration) {
 
-// APLIKACJA EXPRESS
-const app: Express = expressAppWrapper({
-  uiFilesDirectory: CONFIG.UI_DIR,
-  sessionMiddleware,
-})
+    this.config = config;
 
-// SERWER HTTPS
-const server: HttpsServer = httpsServerWrapper({
-  app,
-  options: CONFIG.SERVER_OPTIONS,
-  port: CONFIG.APP_PORT,
-})
+    this.connectToMongoDB(
+      this.config.MONGO_HOST,
+      this.config.MONGO_PORT,
+      this.config.MONGO_DB_NAME,
+      this.config.MONGO_OPTIONS);
 
-// SERWER WEBSOCKET
-const io: WebsocketServer = websocketServerWrapper({
-  sessionMiddleware,
-});
+    this.app = ServerService.buildApp(this.config.UI_DIR);
+    this.server = ServerService.buildServer(this.app, this.config.SERVER_OPTIONS);
+    this.io = ServerService.buildSocketServer();
 
+    this.io.attach(this.server as Server);
+    this.app.set('socketio', this.io);
+  }
 
-io.attach(server as Server);
-app.set('socketio', io);
+  listen() {
+    this.server.listen(this.config.APP_PORT, () => {
+      console.log(`HTTPS server available from: https://localhost:${this.config.APP_PORT}`);
+    });
+  }
+
+  private static buildApp(uiFilesDir: string): Express {
+
+    const app = express();
+    app.use(cors({
+      credentials: true,
+      origin: [
+        'http://localhost:8080',
+        'http://localhost:8081', // dev
+        'https://localhost:8080',
+        'https://localhost:8081', // dev
+      ],
+    }))
+    app.use(express.static(uiFilesDir));
+    app.use(express.json());
+    app.use(cookieParser());
+    app.use(express.urlencoded({
+      extended: false,
+    }));
+    app.use('/api', routes);
+
+    return app;
+  }
+
+  private static buildServer(app: Express, serverOptions: ServerOptions): HttpsServer {
+    return https.createServer(serverOptions, app);
+  }
+
+  private static buildSocketServer(): WebsocketServer {
+
+    const io = new WebsocketServer({
+      cors: {
+        origin: '*',
+      }
+    });
+
+    io.on("connection", (socket) => {
+      socket.on('disconnect', () => {
+        socket.disconnect();
+      });
+    });
+
+    return io;
+  }
+
+  private connectToMongoDB (host: string, port: string, dbName: string, options: ConnectOptions): void {
+    mongoose
+      .connect(
+        `mongodb://${host}:${port}/${dbName}`,
+        options,
+        (_) => {
+          console.log("Connected to mongoDB: " + `mongodb://${host}:${port}/${dbName}`);
+        })
+  }
+}
+
+const serverInstance = new ServerService(CONFIG);
+serverInstance.listen();

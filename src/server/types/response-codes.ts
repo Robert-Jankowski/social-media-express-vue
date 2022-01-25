@@ -2,6 +2,7 @@ export enum ResponseCodes {
   WRONG_BODY_CONTENT = 400,
   NOT_FOUND = 404,
   OK = 200,
+  FORBIDDEN = 403,
   ALREADY_EXIST = 406,
   UNAUTHORIZED = 401,
   CREATED = 201,

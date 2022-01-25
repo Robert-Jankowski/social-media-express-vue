@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { CommentDefinition } from "../types/model-types";
+import { CommentDefinition } from "../types/model-definitions";
 
 const { String, ObjectId } = Schema.Types;
 

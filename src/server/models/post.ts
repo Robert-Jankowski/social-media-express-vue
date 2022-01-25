@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { PostDefinition } from "../types/model-types";
+import { PostDefinition } from "../types/model-definitions";
 
 const { String, ObjectId } = Schema.Types;
 

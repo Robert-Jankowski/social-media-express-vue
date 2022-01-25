@@ -69,8 +69,6 @@
     created () {
       socketService.connect();
       socketService.socket.on(`wall/${this.wallOwnerUsername}/${this.isPrivate ? 'PRIVATE' : 'PUBLIC'}`, (post) => {
-        console.log(post)
-        console.log(this.posts)
         const isNew = !this.posts.map((p) => p.id).includes(post.id);
         this.displayInfoMessage(isNew ? 'New post!' : 'New message!');
         if (isNew) {

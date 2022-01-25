@@ -1,9 +1,10 @@
-import {Router} from 'express';
-import userRoutes from './user-routes';
-import wallRoutes from './wall-routes';
-import friendsRoutes from './friends-routes';
-import authRoutes from './auth-routes';
-import postRoutes from './post-routes';
+import { Router } from 'express';
+
+import friendsRoutes from './friends';
+import authRoutes from './auth';
+import userRoutes from './user';
+import wallRoutes from './wall';
+import postRoutes from './post';
 
 const routes = Router();
 

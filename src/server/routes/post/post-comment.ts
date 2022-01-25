@@ -1,20 +1,9 @@
-import {Request, Response, Router} from "express";
-import { isNil } from "lodash";
-import {ResponseCodes} from "../util/response-codes";
-import {Post, User, Comment} from "../models";
-import {userAuthorization} from "../util/auth-utils";
+import {Request, Response} from "express";
+import {isNil} from "lodash";
+import {ResponseCodes} from "../../types/response-codes";
+import {Comment, Post, User} from "../../models";
 
-// COMMON PATH - /post/:postId
-
-const routes = Router({mergeParams: true});
-
-// Method:        POST
-// Summary:       post comment
-// Description:   check permissions, if successful notify everyone seeing board
-// Permissions:   public - anyone logged / private - user or friends
-// Body:          { commentContent, ? commentKey ? }
-// Response:      { wall }
-routes.post('/', userAuthorization, async (req: Request, res: Response) => {
+export const postCommentHandler = async (req: Request, res: Response) => {
 
   const postId = req.params.postId;
   const userId = req.body.userId;
@@ -73,6 +62,4 @@ routes.post('/', userAuthorization, async (req: Request, res: Response) => {
   catch (error) {
     return res.sendStatus(ResponseCodes.INTERNAL_ERROR);
   }
-});
-
-export default routes;
+}
