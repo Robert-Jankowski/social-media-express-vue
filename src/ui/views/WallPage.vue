@@ -2,7 +2,7 @@
   <n-space vertical class="wall-container">
     <n-card>
       <n-space v-if="userId" justify="center">
-        <nav-bar :username="username"></nav-bar>
+        <nav-bar :username="username"/>
       </n-space>
       <h1 v-if="username !== wallOwnerUsername">{{wallOwnerUsername}}'s Wall</h1>
       <h1 v-else>My Wall</h1>
@@ -20,7 +20,7 @@
       </n-spin>
     </n-card>
     <n-space vertical>
-      <Post v-for="post in posts" :post="post" :userId="userId"></Post>
+      <Post v-for="post in posts" :post="post" :userId="userId"/>
     </n-space>
   </n-space>
 </template>
@@ -35,6 +35,7 @@
   import {NSpace, NCard, useMessage, NSpin, NIcon, NEmpty} from 'naive-ui';
   import NavBar from "../components/common/NavBar";
   import {getUpdatedPosts} from "../utils/socket-utils/update-posts";
+  import {mapGetters} from "vuex";
 
   export default defineComponent({
     name: 'WallPage',
@@ -62,11 +63,15 @@
     data() {
       return {
         posts: null,
-        username: this.$store.state?.user?.username,
-        userId: this.$store.state?.user?.id,
         loading: true,
         empty: false,
       }
+    },
+    computed: {
+      ...mapGetters([
+        'username',
+        'userId',
+      ]),
     },
     created () {
       socketService.connect();

@@ -2,7 +2,7 @@
   <n-card>
     <template #header>
       <n-space justify="center">
-        <nav-bar :username="username"></nav-bar>
+        <nav-bar :username="username"/>
       </n-space>
       <h2 v-if="!isMyPage">{{profileUsername}}'s profile</h2>
       <h2 v-else>My profile</h2>
@@ -15,8 +15,8 @@
                           class="profile-form"
                           :user="profile"
                           @save="onSubmit"
-                          @exit="onEditorExit"></profile-form>
-            <profile-content v-else :user="profile"></profile-content>
+                          @exit="onEditorExit"/>
+            <profile-content v-else :user="profile"/>
           </div>
           <div v-else class="empty-placeholder" :style="(empty || loading) ?{height: '171px'} : {}"></div>
         </n-space>
@@ -42,9 +42,9 @@
                       :disabled="!profile"
                       @click="onEditButtonClick">Private wall</n-button>
           </router-link>
-          <n-button type="primary" @click="onInvite">Invite user</n-button>
+          <n-button v-if="!isMyPage" type="primary" size="large" @click="onInvite">Invite user</n-button>
         </n-space>
-          <n-button v-if="username === profileUsername" strong secondary type="success" size="large"
+          <n-button v-if="isMyPage" strong secondary type="success" size="large"
                     :disabled="!profile"
                     @click="onEditButtonClick">Edit info</n-button>
       </n-space>
@@ -62,20 +62,14 @@
   import ProfileContent from "../components/profile/ProfileContent";
   import NavBar from "../components/common/NavBar";
   import {friendsPageErrorMapper as errorMapper} from "../utils/error-mapper/friends-page-error-mapper";
+  import {mapGetters} from "vuex";
 
   export default defineComponent({
     name: "ProfilePage",
     components: {
-      ProfileContent,
-      ProfileForm,
-      NavBar,
-      NCard,
-      NSpace,
-      NButton,
-      NEmpty,
-      NSpin,
-      NIcon,
-      OfflineIcon,
+      ProfileContent, ProfileForm, NavBar,
+      NCard, NSpace, NButton, NEmpty,
+      NSpin, NIcon, OfflineIcon,
     },
     setup() {
       const route = useRoute();
@@ -94,15 +88,21 @@
     },
     data() {
       return {
-        username: this.$store.state?.user?.username,
-        userId: this.$store.state?.user?.id,
-        isMyPage: this.$store.state?.user?.username === this.profileUsername,
         profile: null,
         empty: false,
         loading: true,
         editing: false,
         canBeInvited: false,
       }
+    },
+    computed: {
+      ...mapGetters([
+        'username',
+        'userId',
+      ]),
+      isMyPage(){
+        return this.username === this.profileUsername;
+      },
     },
     created() {
       dataService.profile.get(this.profileUsername).then((res) => {

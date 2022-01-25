@@ -19,10 +19,7 @@
                 Friend requests ({{requestsCount}})
               </template>
               <template #default>
-                <friends-requests-list @accept="handleAcceptFriend"
-                                       @deny="handleDenyFriend"
-                                       :requests="requests">
-                </friends-requests-list>
+                <friends-requests-list :requests="requests" @accept="handleAcceptFriend" @deny="handleDenyFriend"/>
               </template>
             </n-collapse-item>
             <n-collapse-item>
@@ -30,7 +27,7 @@
                 Friends ({{friendsCount}})
               </template>
               <template #default>
-                <friends-list @remove="handleRemoveFriend" :friends="friends"></friends-list>
+                <friends-list @remove="handleRemoveFriend" :friends="friends"/>
               </template>
             </n-collapse-item>
           </n-collapse>
@@ -66,12 +63,14 @@
   import {friendsPageErrorMapper as errorMapper} from "../utils/error-mapper/friends-page-error-mapper";
   import dataService from "../services/DataService";
   import NavBar from "../components/common/NavBar";
+  import {mapGetters} from "vuex";
 
   export default defineComponent({
     name: 'FriendsPage',
     components: {
       PostForm, FriendsList, FriendsRequestsList, NavBar,
-      NCard, NMenu, NSpace, NAlert, NInput, NButton, NCollapse, NCollapseItem, NEmpty, NIcon,NSpin,
+      NCard, NMenu, NSpace, NAlert, NInput,
+      NButton, NCollapse, NCollapseItem, NEmpty, NIcon,NSpin,
       OfflineIcon,
     },
     setup() {
@@ -87,8 +86,6 @@
     },
     data() {
       return {
-        username: this.$store.state?.user?.username,
-        userId: this.$store.state?.user?.id,
         friends: null,
         requests: null,
         userToInvite: '',
@@ -96,6 +93,18 @@
         empty: false,
         loading: true,
       }
+    },
+    computed: {
+      requestsCount() {
+        return this.requests?.length ?? 0;
+      },
+      friendsCount() {
+        return this.friends?.length ?? 0;
+      },
+      ...mapGetters([
+        'username',
+        'userId',
+      ]),
     },
     methods: {
       handleInviteFriend() {
@@ -142,14 +151,6 @@
           .catch((error) => {
             this.errorContent = errorMapper(error);
           })
-      }
-    },
-    computed: {
-      requestsCount() {
-        return this.requests?.length ?? 0;
-      },
-      friendsCount() {
-        return this.friends?.length ?? 0;
       }
     },
     created() {

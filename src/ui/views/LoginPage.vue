@@ -3,8 +3,7 @@
     <template #header>
       <h1>MicroWall</h1>
     </template>
-    <login-form :registerView="registerView" @onSubmit="handleSubmit">
-    </login-form>
+    <login-form :registerView="registerView" @onSubmit="handleSubmit"/>
     <n-space justify="center">
       <n-alert v-if="errorContent"
                closable
@@ -16,7 +15,7 @@
     <n-space justify="end">
       <n-space vertical>
         <span>register</span>
-        <n-switch v-model:value="registerView" size="large"></n-switch>
+        <n-switch v-model:value="registerView" size="large"/>
       </n-space>
     </n-space>
   </n-card>

@@ -10,7 +10,7 @@
       </template>
       <template #default>
 
-        <post-form v-if="username" @onSubmit="handleSubmit"></post-form>
+        <post-form v-if="username" @onSubmit="handleSubmit"/>
         <n-space justify="center">
           <n-alert v-if="errorContent"
                    closable
@@ -31,6 +31,7 @@
   import {homePageErrorMapper as errorMapper} from "../utils/error-mapper/home-page-error-mapper";
   import dataService from "../services/DataService";
   import NavBar from "../components/common/NavBar";
+  import {mapGetters} from "vuex";
 
   export default defineComponent({
     name: 'HomePage',
@@ -40,10 +41,14 @@
     },
     data() {
       return {
-        username: this.$store.getters.username,
-        userId: this.$store.getters.userId,
         errorContent: null,
       }
+    },
+    computed: {
+      ...mapGetters([
+        'username',
+        'userId',
+      ]),
     },
     methods: {
       handleSubmit(value) {

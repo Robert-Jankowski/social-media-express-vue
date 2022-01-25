@@ -57,11 +57,12 @@
     data() {
       return {
         commentToSend: '',
-        comments: this.post.comments,
-        userId: this.userId,
       }
     },
     computed: {
+      comments() {
+        return this.post.comments;
+      },
       numberOfComments() {
         return this.comments.length;
       },
