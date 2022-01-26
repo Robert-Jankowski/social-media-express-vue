@@ -28,9 +28,9 @@ class ServerService {
       this.config.MONGO_DB_NAME,
       this.config.MONGO_OPTIONS);
 
-    this.app = ServerService.buildApp(this.config.UI_DIR);
+    this.app = ServerService.buildApp(this.config.APP_HOST, this.config.APP_PORT, this.config.UI_DIR);
     this.server = ServerService.buildServer(this.app, this.config.SERVER_OPTIONS);
-    this.io = ServerService.buildSocketServer();
+    this.io = ServerService.buildSocketServer(this.config.APP_HOST, this.config.APP_PORT);
 
     this.io.attach(this.server as Server);
     this.app.set('socketio', this.io);
@@ -42,15 +42,13 @@ class ServerService {
     });
   }
 
-  private static buildApp(uiFilesDir: string): Express {
+  private static buildApp(host: string, port: string, uiFilesDir: string): Express {
 
     const app = express();
     app.use(cors({
       credentials: true,
       origin: [
-        'http://localhost:8080',
-        'http://localhost:8081', // dev
-        'https://localhost:8080',
+        `https://${host}:${port}`,
         'https://localhost:8081', // dev
       ],
     }))
@@ -69,11 +67,14 @@ class ServerService {
     return https.createServer(serverOptions, app);
   }
 
-  private static buildSocketServer(): WebsocketServer {
+  private static buildSocketServer(host: string, port:string): WebsocketServer {
 
     const io = new WebsocketServer({
       cors: {
-        origin: '*',
+        origin: [
+          `https://${host}:${port}`,
+          'https://localhost:8081', // dev
+        ],
       }
     });
 
