@@ -31,7 +31,7 @@ class ServerService {
 
     this.app = ServerService.buildApp(this.config.UI_DIR);
     this.server = ServerService.buildServer(this.app, this.config.SERVER_OPTIONS);
-    this.io = ServerService.buildSocketServer(this.config.APP_HOST, this.config.APP_PORT);
+    this.io = ServerService.buildSocketServer();
 
     this.io.attach(this.server as Server);
     this.app.set('socketio', this.io);
@@ -68,7 +68,7 @@ class ServerService {
     return https.createServer(serverOptions, app);
   }
 
-  private static buildSocketServer(host: string, port:string): WebsocketServer {
+  private static buildSocketServer(): WebsocketServer {
 
     const io = new WebsocketServer({
       cors: {
