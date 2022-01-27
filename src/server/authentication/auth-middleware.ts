@@ -4,21 +4,7 @@ import { NextFunction, Request, Response } from "express";
 import { ResponseCodes } from "../types/response-codes";
 import { tail } from 'lodash';
 
-const exclusions = [
-  {
-    path: /\/api\/wall\/.*/g,
-    method: 'GET'
-  },
-  {
-    path: /\/api\/user\/.*\/profile/g,
-    method: 'GET'
-  },
-];
-
 export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
-
-  const allowWithoutAuth = exclusions.some((exclusion) =>
-    exclusion.path.test(req.originalUrl) && exclusion.method === req.method);
 
   const authHeader = req.headers['authorization'];
   const tokenArr = authHeader && authHeader.split(' ');
@@ -31,7 +17,7 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
       .replaceAll('token=', '')
       .replaceAll(';','');
 
-    await jwt.verify(tokenToTest, CONFIG.JWT_SECRET, (err: any, user: any) => {
+    jwt.verify(tokenToTest, CONFIG.JWT_SECRET, (err: any, user: any) => {
 
       if (!err) {
         // @ts-ignore
@@ -42,9 +28,11 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     })
   }
 
-  console.log(`${req.method} ${req.originalUrl}`, 'exclusion=', allowWithoutAuth, 'validated=', validated)
+  if (/\/api\/wall\/.+/g.test(req.originalUrl) && req.method === 'GET') {
+    return next();
+  }
 
-  if (validated || allowWithoutAuth) {
+  if (validated) {
     return next();
   }
 
