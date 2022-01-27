@@ -14,7 +14,7 @@ const MONGO_OPTIONS: ConnectOptions = { };
 const APP_PORT = process.env.APP_PORT ?? '8080';
 const APP_HOST = process.env.APP_HOST ?? 'localhost';
 
-const JWT_SECRET = process.env.JTW_SECRET ?? 'd664fe909982184cc1bf37d18bc0f0c139c3fe46d3969a7ab13283d9b7abb3b2';
+const JWT_SECRET = process.env.JWT_SECRET ?? 'd664fe909982184cc1bf37d18bc0f0c139c3fe46d3969a7ab13283d9b7abb3b2';
 const JWT_OPTIONS = { expiresIn: '3600s' };
 
 const UI_DIR = process.env.UI_DIR ?? 'dist';

@@ -25,19 +25,3 @@ export const getUpdatedPosts = (posts, message) => {
 
   return result;
 }
-  // posts.map((post) => {
-  //   if (message.post === post.id) {
-  //
-  //     const newComments = [
-  //         ...post.comments,
-  //       {content: message.content, author: message.author},
-  //     ]
-  //
-  //     return {
-  //       ...post,
-  //       comments: newComments,
-  //     };
-  //   }
-  //
-  //   return post;
-  // });
