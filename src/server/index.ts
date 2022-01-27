@@ -29,7 +29,7 @@ class ServerService {
       this.config.MONGO_DB_NAME,
       this.config.MONGO_OPTIONS);
 
-    this.app = ServerService.buildApp(this.config.APP_HOST, this.config.APP_PORT, this.config.UI_DIR);
+    this.app = ServerService.buildApp(this.config.UI_DIR);
     this.server = ServerService.buildServer(this.app, this.config.SERVER_OPTIONS);
     this.io = ServerService.buildSocketServer(this.config.APP_HOST, this.config.APP_PORT);
 
@@ -43,13 +43,12 @@ class ServerService {
     });
   }
 
-  private static buildApp(host: string, port: string, uiFilesDir: string): Express {
+  private static buildApp(uiFilesDir: string): Express {
 
     const app = express();
     app.use(cors({
       credentials: true,
       origin: [
-        `https://${host}:${port}`,
         'https://localhost:8081', // dev
       ],
     }))
@@ -60,6 +59,7 @@ class ServerService {
       extended: false,
     }));
     app.use('/api', routes);
+    app.use('/*', express.static(uiFilesDir));
 
     return app;
   }
@@ -73,7 +73,6 @@ class ServerService {
     const io = new WebsocketServer({
       cors: {
         origin: [
-          `https://${host}:${port}`,
           'https://localhost:8081', // dev
         ],
       }
