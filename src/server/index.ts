@@ -10,6 +10,7 @@ import routes from './routes';
 import https from 'https';
 import {AppConfiguration} from './types/app-configuration';
 import CONFIG from './config';
+import socketioJwt from 'socketio-jwt';
 
 class ServerService {
 
@@ -77,6 +78,11 @@ class ServerService {
         ],
       }
     });
+
+    io.use(socketioJwt.authorize({
+      secret: CONFIG.JWT_SECRET,
+      handshake: true
+    }));
 
     io.on("connection", (socket) => {
       socket.on('disconnect', () => {

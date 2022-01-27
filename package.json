@@ -23,6 +23,7 @@
     "naive-ui": "^2.24.1",
     "socket.io": "^4.4.1",
     "socket.io-client": "^4.4.1",
+    "socketio-jwt": "^4.6.2",
     "tslib": "^2.3.1",
     "vfonts": "^0.0.3",
     "vue": "^3.0.0",
@@ -49,6 +50,7 @@
     "dev-ui": "vue-cli-service serve --https true",
     "build-ui": "vue-cli-service build",
     "dev-api": "ts-node-dev ./src/server/index.ts",
-    "build": "vue-cli-service build && tsc --project ./tsconfig.json"
+    "build": "vue-cli-service build && tsc --project ./tsconfig.json",
+    "prod": "vue-cli-service build && tsc --project ./tsconfig.json && node ./out/index.js"
   }
 }

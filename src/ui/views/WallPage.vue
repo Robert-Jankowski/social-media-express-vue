@@ -29,13 +29,13 @@
   import Post from '../components/wall/Post.vue';
   import { defineComponent } from 'vue';
   import dataService from "../services/DataService";
-  import socketService from "../services/WebsocketService";
   import { useRoute } from 'vue-router';
   import { CloudOfflineSharp as OfflineIcon } from '@vicons/ionicons5';
   import {NSpace, NCard, useMessage, NSpin, NIcon, NEmpty} from 'naive-ui';
   import NavBar from "../components/common/NavBar";
   import {getUpdatedPosts} from "../utils/socket-utils/update-posts";
   import {mapGetters} from "vuex";
+  import socketService from "../services/WebsocketService";
 
   export default defineComponent({
     name: 'WallPage',
@@ -81,11 +81,7 @@
         if (isNew) {
           this.posts = [ post, ...this.posts];
         } else {
-          const newPosts = getUpdatedPosts(this.posts, post);
-          this.posts = [];
-          this.$nextTick(() => {
-            this.posts = [...newPosts];
-          })
+          this.posts = getUpdatedPosts(this.posts, post);
         }
       });
 
@@ -100,7 +96,7 @@
     },
 
     beforeUnmount() {
-      socketService.disconnect()
+      socketService.disconnect();
     }
   })
 </script>

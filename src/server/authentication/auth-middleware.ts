@@ -17,16 +17,15 @@ const exclusions = [
 
 export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
 
-  const authHeader = req.headers['authorization']
-  const tokenArr = authHeader && authHeader.split(' ');
+  const allowWithoutAuth = exclusions.some((exclusion) =>
+    exclusion.path.test(req.originalUrl) && exclusion.method === req.method);
 
-  if (tokenArr == null) {
-    return res.sendStatus(ResponseCodes.UNAUTHORIZED);
-  }
+  const authHeader = req.headers['authorization'];
+  const tokenArr = authHeader && authHeader.split(' ');
 
   let validated = false;
 
-  for (const token of tail(tokenArr)) {
+  for (const token of tail(tokenArr ?? [])) {
 
     const tokenToTest = token
       .replaceAll('token=', '')
@@ -43,12 +42,11 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     })
   }
 
-  const allowWithoutAuth = exclusions.some((exclusion) =>
-    exclusion.path.test(req.originalUrl) && exclusion.method === req.method);
+  console.log(`${req.method} ${req.originalUrl}`, 'exclusion=', allowWithoutAuth, 'validated=', validated)
 
-  if (validated || !allowWithoutAuth) {
+  if (validated || allowWithoutAuth) {
     return next();
   }
 
-  return res.sendStatus(ResponseCodes.FORBIDDEN);
+  return res.sendStatus(ResponseCodes.UNAUTHORIZED);
 }

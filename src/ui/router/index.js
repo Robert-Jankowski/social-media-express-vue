@@ -5,8 +5,9 @@ import HomePage from '../views/HomePage.vue';
 import WallPage from "../views/WallPage";
 import FriendsPage from "../views/FriendsPage";
 import ProfilePage from "../views/ProfilePage";
-import {isNil} from "lodash";
 import WrongRoutePage from "../views/WrongRoutePage";
+import {isNil} from "lodash";
+
 
 const routes = [
   {

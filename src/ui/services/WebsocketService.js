@@ -1,4 +1,4 @@
-import { io } from 'socket.io-client';
+import {io} from 'socket.io-client';
 
 class WebsocketService {
   socket;
@@ -6,15 +6,18 @@ class WebsocketService {
   host;
   constructor() {
     this.host = process.env.APP_HOST ?? 'localhost';
-    this.port =  process.env.APP_PORT ?? 8080;
+    this.port = process.env.APP_PORT ?? 8080;
   }
 
   connect() {
-    console.log(this.buildUrl())
-    this.socket = io(this.buildUrl());
-    this.socket.emit('my message', 'Hello there from Vue.');
+    this.socket = io(this.buildUrl(), this.getToken());
     this.socket.on("connect", () => {
       console.log(`Connected to socket: ${this.socket.id}`);
+    });
+    this.socket.on('unauthorized', (error) => {
+      if (error.data.type === 'UnauthorizedError' || error.data.code === 'invalid_token') {
+        console.log('User token has expired');
+      }
     });
   }
 
@@ -26,6 +29,12 @@ class WebsocketService {
 
   buildUrl() {
     return `wss://${this.host}:${this.port}`;
+  }
+
+  getToken() {
+    return {
+      query: `token=${sessionStorage.getItem('microwall-jwt')}`
+    }
   }
 }
 
