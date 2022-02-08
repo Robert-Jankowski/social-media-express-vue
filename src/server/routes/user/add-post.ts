@@ -7,6 +7,7 @@ import {PostTypes} from "../../types/post-types";
 export const addPostHandler = async (req: Request, res: Response) => {
 
   const io = req.app.get('socketio');
+  const guestIo = req.app.get('socketio-guest');
 
   const {title, content, type} = req.body as {
     title: string;
@@ -45,6 +46,16 @@ export const addPostHandler = async (req: Request, res: Response) => {
         author: user.username,
         comments: [],
       })
+
+      if (savedPost.type === PostTypes.PUBLIC) {
+        guestIo.emit(`wall/${user.username}/${PostTypes.PUBLIC}`, {
+          id: savedPost.id,
+          title: savedPost.title,
+          content: savedPost.content,
+          author: user.username,
+          comments: [],
+        })
+      }
 
       return res
         .status(ResponseCodes.OK)
@@ -85,6 +96,14 @@ export const addPostHandler = async (req: Request, res: Response) => {
       author: user.username,
       comments: [],
     });
+
+    guestIo.emit(`wall/${user.username}/${PostTypes.PUBLIC}`, {
+      id: savedPublicPost.id,
+      title: savedPublicPost.title,
+      content: savedPublicPost.content,
+      author: user.username,
+      comments: [],
+    })
 
     return res
       .status(ResponseCodes.OK)

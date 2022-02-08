@@ -9,10 +9,10 @@ class WebsocketService {
     this.port = process.env.APP_PORT ?? 8080;
   }
 
-  connect() {
-    this.socket = io(this.buildUrl(), this.getToken());
+  connect(logged) {
+    this.socket = io(this.buildUrl(), this.getOptions(logged));
     this.socket.on("connect", () => {
-      console.log(`Connected to socket: ${this.socket.id}`);
+      console.log(`Connected to ${logged ? 'secured' : 'public'} socket`, this.socket.id);
     });
     this.socket.on('unauthorized', (error) => {
       if (error.data.type === 'UnauthorizedError' || error.data.code === 'invalid_token') {
@@ -31,11 +31,12 @@ class WebsocketService {
     return `wss://${this.host}:${this.port}`;
   }
 
-  getToken() {
-    return {
-      query: `token=${sessionStorage.getItem('microwall-jwt')}`
-    }
+  getOptions(logged) {
+
+    return logged ?
+      { path: '/socket.io/user', query: `token=${sessionStorage.getItem('microwall-jwt')}` } :
+      { path: '/socket.io/guest'}
   }
 }
 
-export default new WebsocketService();
+export default WebsocketService;

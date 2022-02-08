@@ -35,7 +35,8 @@
   import NavBar from "../components/common/NavBar";
   import {getUpdatedPosts} from "../utils/socket-utils/update-posts";
   import {mapGetters} from "vuex";
-  import socketService from "../services/WebsocketService";
+  import WebsocketService from "../services/WebsocketService";
+  import {isNil} from "lodash";
 
   export default defineComponent({
     name: 'WallPage',
@@ -52,6 +53,7 @@
 
       return {
         wallOwnerUsername,
+        socketService: new WebsocketService(),
         displayErrorMessage(msg) {
           message.error(msg, {duration: 5000});
         },
@@ -73,18 +75,18 @@
         'userId',
       ]),
     },
-    created () {
-      socketService.connect();
-      socketService.socket.on(`wall/${this.wallOwnerUsername}/${this.isPrivate ? 'PRIVATE' : 'PUBLIC'}`, (post) => {
-        const isNew = !this.posts.map((p) => p.id).includes(post.id);
+    methods: {
+      refresh(post) {
+        const isNew = !Object.values(this.posts).map((p) => p.id).includes(post.id);
         this.displayInfoMessage(isNew ? 'New post!' : 'New message!');
         if (isNew) {
-          this.posts = [ post, ...this.posts];
+          this.posts = [ post, ...Object.values(this.posts)];
         } else {
-          this.posts = getUpdatedPosts(this.posts, post);
+          this.posts = getUpdatedPosts(Object.values(this.posts), post);
         }
-      });
-
+      },
+    },
+    created () {
       dataService.wall.get(this.wallOwnerUsername, this.isPrivate).then((res) => {
         this.posts = res.data;
         this.loading = false;
@@ -93,10 +95,15 @@
         this.loading = false;
         this.displayErrorMessage('An error occurred while fetching this wall.')
       })
+
+      this.socketService.connect(!isNil(this.userId));
+      this.socketService.socket.on(`wall/${this.wallOwnerUsername}/${this.isPrivate ? 'PRIVATE' : 'PUBLIC'}`, (post) => {
+        this.refresh(post);
+      });
     },
 
     beforeUnmount() {
-      socketService.disconnect();
+      this.socketService.disconnect();
     }
   })
 </script>

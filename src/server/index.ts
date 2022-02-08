@@ -17,7 +17,8 @@ class ServerService {
   private readonly config: AppConfiguration;
   private readonly app: Express;
   private readonly server: HttpsServer;
-  private readonly io: WebsocketServer;
+  private readonly authorizedSocket: WebsocketServer;
+  private readonly publicSocket: WebsocketServer;
 
   constructor(config: AppConfiguration) {
 
@@ -31,10 +32,14 @@ class ServerService {
 
     this.app = ServerService.buildApp(this.config.UI_DIR);
     this.server = ServerService.buildServer(this.app, this.config.SERVER_OPTIONS);
-    this.io = ServerService.buildSocketServer();
+    this.authorizedSocket = ServerService.buildAuthorizedSocket();
+    this.publicSocket = ServerService.buildPublicSocket();
 
-    this.io.attach(this.server as Server);
-    this.app.set('socketio', this.io);
+    this.publicSocket.attach(this.server as Server);
+    this.authorizedSocket.attach(this.server as Server);
+
+    this.app.set('socketio', this.authorizedSocket);
+    this.app.set('socketio-guest', this.publicSocket);
   }
 
   listen() {
@@ -68,9 +73,10 @@ class ServerService {
     return https.createServer(serverOptions, app);
   }
 
-  private static buildSocketServer(): WebsocketServer {
+  private static buildAuthorizedSocket(): WebsocketServer {
 
     const io = new WebsocketServer({
+      path: '/socket.io/user',
       cors: {
         origin: [
           'https://localhost:8081', // dev
@@ -84,6 +90,28 @@ class ServerService {
     }));
 
     io.on("connection", (socket) => {
+      console.log("authorized socket connection")
+      socket.on('disconnect', () => {
+        socket.disconnect();
+      });
+    });
+
+    return io;
+  }
+
+  private static buildPublicSocket(): WebsocketServer {
+
+    const io = new WebsocketServer({
+      path: '/socket.io/guest',
+      cors: {
+        origin: [
+          'https://localhost:8081', // dev
+        ],
+      }
+    });
+
+    io.on("connection", (socket) => {
+      console.log("guest socket connection")
       socket.on('disconnect', () => {
         socket.disconnect();
       });
