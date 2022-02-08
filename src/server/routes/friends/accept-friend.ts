@@ -5,6 +5,8 @@ import {User} from "../../models";
 
 export const acceptFriendHandler = async (req: Request, res: Response) => {
 
+  const io = req.app.get('socketio');
+
   const {friendUsername, userId} = req.params as {
     friendUsername: string;
     userId: string;
@@ -37,6 +39,10 @@ export const acceptFriendHandler = async (req: Request, res: Response) => {
     await user.save();
     // @ts-ignore
     await friend.save();
+
+    io.emit(`user/${friend._id.toString()}/friends`, {
+      username: user.username,
+    })
 
     return res.sendStatus(ResponseCodes.OK);
 

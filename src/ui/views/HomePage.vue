@@ -3,7 +3,7 @@
     <n-card>
       <template v-if="username" #header>
         <n-space justify="center">
-          <nav-bar :username="username"></nav-bar>
+          <nav-bar :username="username" :userId="userId" :newRequests="newRequests"></nav-bar>
         </n-space>
         <h2>Hello {{username ?? 'guest'}}</h2>
         <h3>What's in your mind today?</h3>
@@ -48,6 +48,7 @@
       ...mapGetters([
         'username',
         'userId',
+        'newRequests',
       ]),
     },
     methods: {

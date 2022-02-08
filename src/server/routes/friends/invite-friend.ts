@@ -9,6 +9,8 @@ export const inviteFriendHandler = async (req: Request, res: Response) => {
     userId: string;
   };
 
+  const io = req.app.get('socketio');
+
   if (isNil(friendUsername) || isNil(userId)) {
     return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
   }
@@ -34,6 +36,11 @@ export const inviteFriendHandler = async (req: Request, res: Response) => {
     friend.friendRequests.push(user._id);
     // @ts-ignore
     await friend.save();
+
+    io.emit(`user/${friend._id.toString()}/requests`, {})
+    io.emit(`user/${friend._id.toString()}/request`, {
+      username: user.username,
+    })
 
     return res.sendStatus(ResponseCodes.OK);
 

@@ -2,7 +2,7 @@
   <n-space vertical class="wall-container">
     <n-card>
       <n-space v-if="userId" justify="center">
-        <nav-bar :username="username"/>
+        <nav-bar :username="username" :userId="userId" :newRequests="newRequests"/>
       </n-space>
       <h1 v-if="username !== wallOwnerUsername">{{wallOwnerUsername}}'s Wall</h1>
       <h1 v-else>My Wall</h1>
@@ -73,6 +73,7 @@
       ...mapGetters([
         'username',
         'userId',
+        'newRequests',
       ]),
     },
     methods: {

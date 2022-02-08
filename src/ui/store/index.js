@@ -6,6 +6,7 @@ const store = new Store({
     return {
       user: null,
       askForLogin: true,
+      newRequests: false,
     }
   },
   mutations: {
@@ -15,6 +16,9 @@ const store = new Store({
     SET_USER(state, user) {
       state.user = user;
     },
+    SET_NEW_REQUESTS(state, newRequests) {
+      state.newRequests = newRequests;
+    }
   },
   getters: {
     isLogged(state) {
@@ -28,6 +32,9 @@ const store = new Store({
     },
     askForLogin(state) {
       return state.askForLogin;
+    },
+    newRequests(state) {
+      return state.newRequests;
     }
   },
   actions: {

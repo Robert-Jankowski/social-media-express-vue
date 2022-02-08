@@ -2,7 +2,7 @@
     <n-card>
       <template #header>
         <n-space justify="center">
-          <nav-bar :username="username"></nav-bar>
+          <nav-bar :username="username" :userId="userId" :newRequests="newRequests"></nav-bar>
         </n-space>
         <h2>My friends</h2>
       </template>
@@ -64,6 +64,8 @@
   import dataService from "../services/DataService";
   import NavBar from "../components/common/NavBar";
   import {mapGetters} from "vuex";
+  import WebsocketService from "../services/WebsocketService";
+  import {isNil} from "lodash";
 
   export default defineComponent({
     name: 'FriendsPage',
@@ -76,6 +78,7 @@
     setup() {
       const message = useMessage();
       return {
+        socketService: new WebsocketService(),
         displayErrorMessage(msg) {
           message.error(msg, { duration: 5000 });
         },
@@ -88,6 +91,7 @@
       return {
         friends: null,
         requests: null,
+        newRequests: null,
         userToInvite: '',
         errorContent: null,
         empty: false,
@@ -104,6 +108,7 @@
       ...mapGetters([
         'username',
         'userId',
+        'newRequests',
       ]),
     },
     methods: {
@@ -137,6 +142,7 @@
             this.displayInfoMessage('One more friend to your friends list!');
             this.requests = this.requests.filter((friend) => friend !== value);
             this.friends = [...this.friends, value];
+            this.$store.commit('SET_NEW_REQUESTS', false)
           })
           .catch((error) => {
             this.errorContent = errorMapper(error);
@@ -147,6 +153,7 @@
           .then((res) => {
             this.displayInfoMessage('You denied friend request. But why?');
             this.requests = this.requests.filter((friend) => friend !== value);
+            this.$store.commit('SET_NEW_REQUESTS', false)
           })
           .catch((error) => {
             this.errorContent = errorMapper(error);
@@ -154,6 +161,15 @@
       }
     },
     created() {
+
+      this.socketService.connect(!isNil(this.userId));
+      this.socketService.socket.on(`user/${this.userId}/request`, (friend) => {
+        this.requests = [friend.username, ...this.requests];
+      });
+      this.socketService.socket.on(`user/${this.userId}/friends`, (friend) => {
+        this.friends = [...this.friends, friend.username];
+      });
+
       dataService.friends.get(this.userId).then((res) => {
         this.friends = res.data.friends;
         this.requests = res.data.requests;

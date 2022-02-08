@@ -2,7 +2,7 @@
   <n-card>
     <template #header>
       <n-space justify="center">
-        <nav-bar :username="username"/>
+        <nav-bar :username="username" :userId="userId" :newRequests="newRequests"/>
       </n-space>
       <h2 v-if="!isMyPage">{{profileUsername}}'s profile</h2>
       <h2 v-else>My profile</h2>
@@ -99,6 +99,7 @@
       ...mapGetters([
         'username',
         'userId',
+        'newRequests',
       ]),
       isMyPage(){
         return this.username === this.profileUsername;

@@ -90,7 +90,6 @@ class ServerService {
     }));
 
     io.on("connection", (socket) => {
-      console.log("authorized socket connection")
       socket.on('disconnect', () => {
         socket.disconnect();
       });
@@ -111,7 +110,6 @@ class ServerService {
     });
 
     io.on("connection", (socket) => {
-      console.log("guest socket connection")
       socket.on('disconnect', () => {
         socket.disconnect();
       });
