@@ -102,7 +102,6 @@
         this.refresh(post);
       });
     },
-
     beforeUnmount() {
       this.socketService.disconnect();
     }

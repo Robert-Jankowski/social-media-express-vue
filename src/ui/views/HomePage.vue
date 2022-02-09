@@ -5,7 +5,7 @@
         <n-space justify="center">
           <nav-bar :username="username" :userId="userId" :newRequests="newRequests"></nav-bar>
         </n-space>
-        <h2>Hello {{username ?? 'guest'}}</h2>
+        <h2>Hello {{username}}</h2>
         <h3>What's in your mind today?</h3>
       </template>
       <template #default>

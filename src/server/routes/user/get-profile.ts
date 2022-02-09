@@ -23,7 +23,7 @@ export const getProfileHandler = async (req: Request, res: Response) => {
     let canBeInvited = false;
 
     // @ts-ignore
-    if(isNil(req.user)) {
+    if(!isNil(req.user)) {
       // @ts-ignore
       const user = await User.findById(req.user.id);
 
@@ -31,7 +31,7 @@ export const getProfileHandler = async (req: Request, res: Response) => {
         canBeInvited = !user.friends
           .map((friend) => friend.toString())
           // @ts-ignore
-          .includes(profileOwner._id);
+          .includes(profileOwner._id.toString());
       }
     }
 

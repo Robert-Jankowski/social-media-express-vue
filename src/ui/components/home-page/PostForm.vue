@@ -34,12 +34,11 @@
   import {isNil} from "lodash";
 
   export default defineComponent({
-    name: 'LoginForm',
+    name: 'PostForm',
     components: {
       NForm, NCard, NFormItem, NInput, NButton, NSpace, NSelect,
     },
     emits: ['onSubmit'],
-    props: ['registerView'],
     setup(props, { emit }) {
 
       const formRef = ref(null);

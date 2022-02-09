@@ -42,7 +42,7 @@
                       :disabled="!profile"
                       @click="onEditButtonClick">Private wall</n-button>
           </router-link>
-          <n-button v-if="!isMyPage" type="primary" size="large" @click="onInvite">Invite user</n-button>
+          <n-button v-if="!isMyPage && canBeInvited" type="primary" size="large" @click="onInvite">Invite user</n-button>
         </n-space>
           <n-button v-if="isMyPage" strong secondary type="success" size="large"
                     :disabled="!profile"
@@ -108,7 +108,7 @@
     created() {
       dataService.profile.get(this.profileUsername).then((res) => {
         this.profile = res.data.profile;
-        this.canBeInvited = true;
+        this.canBeInvited = res.data.canBeInvited;
         this.loading = false;
       }).catch((error) => {
         this.loading = false;

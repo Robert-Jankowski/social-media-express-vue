@@ -91,7 +91,6 @@
       return {
         friends: null,
         requests: null,
-        newRequests: null,
         userToInvite: '',
         errorContent: null,
         empty: false,
