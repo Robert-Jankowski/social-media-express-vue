@@ -13,24 +13,20 @@ export const loginHandler = async (req: Request, res: Response) => {
   };
 
   if (isNil(username) || isNil(password)) {
-    return res
-      .status(ResponseCodes.WRONG_BODY_CONTENT);
+    return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
   }
 
   try {
-    // @ts-ignore
-    const user: User = await User.findOne({username});
-
+    const user = await User.findOne({username});
 
     if(isNil(user)) {
-      return res.sendStatus(ResponseCodes.FORBIDDEN);
+      return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
     const verified = compareSync(password, user.password);
 
     if(!verified) {
-      return res
-        .status(ResponseCodes.UNAUTHORIZED);
+      return res.sendStatus(ResponseCodes.UNAUTHORIZED);
     }
 
     const userTokenData = {
@@ -49,7 +45,6 @@ export const loginHandler = async (req: Request, res: Response) => {
       });
 
   } catch (error) {
-    return res
-      .sendStatus(ResponseCodes.INTERNAL_ERROR);
+    return res.sendStatus(ResponseCodes.INTERNAL_ERROR);
   }
 }

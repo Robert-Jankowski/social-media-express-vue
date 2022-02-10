@@ -7,21 +7,19 @@ import {generateAuthToken} from "../../authentication/auth-token-generator";
 
 export const registerHandler = async (req: Request, res: Response) => {
 
+  const { password, username } = req.body as {
+    username: string;
+    password: string;
+  };
+
+  if (isNil(username) || isNil(password)) {
+    return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
+  }
+
   try {
 
-    const { password, username } = req.body as {
-      username: string;
-      password: string;
-    }
-
-    if (isNil(username) || isNil(password)) {
-      return res
-        .status(ResponseCodes.WRONG_BODY_CONTENT)
-    }
-
     if (await User.exists({username})) {
-      return res
-        .status(ResponseCodes.ALREADY_EXIST)
+      return res.sendStatus(ResponseCodes.ALREADY_EXIST);
     }
 
     const hashedPassword = hashSync(password);
@@ -32,25 +30,25 @@ export const registerHandler = async (req: Request, res: Response) => {
       friends: [],
       friendRequests: [],
       tags: [],
-    })
+    });
 
     const saved = await newUser.save();
 
     const userTokenData = {
       id: saved._id,
       username: saved.username,
-    }
+    };
 
     const token = generateAuthToken(userTokenData);
 
     return res
-      .status(ResponseCodes.CREATED).send({
+      .status(ResponseCodes.CREATED)
+      .send({
         user: userTokenData,
         token,
       });
 
   } catch (error) {
-    return res
-      .status(ResponseCodes.INTERNAL_ERROR)
+    return res.sendStatus(ResponseCodes.INTERNAL_ERROR);
   }
 }

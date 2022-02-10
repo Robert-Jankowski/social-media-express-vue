@@ -36,6 +36,9 @@ class DataService {
     register: (username, password) =>
       axios.post(this.buildUrl('user/register'), {username, password}),
 
+    revive: () =>
+      axios.post(this.buildUrl('user/revive'), undefined, this.getProxy()),
+
     post: ({title, content, type}) =>
       axios.post(this.buildUrl(`user`), {title, content, type}, this.getProxy()),
   };

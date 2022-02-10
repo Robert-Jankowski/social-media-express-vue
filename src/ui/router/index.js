@@ -1,5 +1,6 @@
 import {createRouter, createWebHistory} from 'vue-router';
 import store from '../store/index';
+import dataService from '../services/DataService';
 import LoginPage from '../views/LoginPage.vue';
 import HomePage from '../views/HomePage.vue';
 import WallPage from "../views/WallPage";
@@ -85,16 +86,41 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
 
-  if (to.fullPath === '/login' && store.getters.isLogged) {
+  if (!store.getters.isLogged) {
+
+    const token = sessionStorage.getItem('microwall-jwt');
+
+    if (isNil(token)) {
+
+      if (to.meta.requiresAuth) {
+
+          return next({name: 'Login'});
+        }
+
+      return next();
+    }
+
+    dataService.user.revive()
+      .then((res) => {
+        store.commit('SET_NEW_REQUESTS', res.data.newRequests)
+        store.commit('SET_USER', res.data.user)
+
+        if(to.fullPath === '/login' || to.fullPath === '/') {
+
+          return next({name: 'HomePage'});
+        }
+
+        return next();
+      }).catch((error) => {
+      sessionStorage.removeItem('microwall-jwt');
+
+      return next({name: 'Login'});
+    })
+  }
+
+  if(to.fullPath === '/login' || to.fullPath === '/') {
+
     return next({name: 'HomePage'});
-  }
-
-  if (to.fullPath === '/login') {
-    return next();
-  }
-
-  if (to.meta.requiresAuth) {
-    return !isNil(store.state.user) ? next() : next({name: 'Login'});
   }
 
   return next();
