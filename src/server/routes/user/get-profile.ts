@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {User} from "../../models";
-import {find, isNil} from "lodash";
+import {includes, isNil} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
 
 export const getProfileHandler = async (req: Request, res: Response) => {
@@ -23,7 +23,7 @@ export const getProfileHandler = async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.FORBIDDEN);
     }
 
-    const canBeInvited = !find(user.friends, profileOwner._id);
+    const canBeInvited = !includes(user.friends.map((f)=>f.toString()), profileOwner._id.toString());
 
     return res.status(ResponseCodes.OK)
       .send({

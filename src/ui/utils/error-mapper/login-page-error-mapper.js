@@ -9,6 +9,8 @@ export const loginPageErrorMapper = (error) => {
       return 'Wrong credentials! Pass correct username and password.';
     case 403:
       return 'Error: you should not exist, but you exist. Weird.';
+    case 404:
+      return 'That user does not exist.';
     case 406:
       return 'Someone is already using this username. Let\'s try another one!';
     case 500:

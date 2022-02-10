@@ -1,6 +1,5 @@
 import {Request, Response} from "express";
 import {ResponseCodes} from "../../types/response-codes";
-import {UserTokenData} from "../../authentication/auth-types";
 import {User} from "../../models";
 import { isNil } from "lodash";
 

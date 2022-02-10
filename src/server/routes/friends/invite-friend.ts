@@ -1,5 +1,5 @@
 import { Request, Response} from "express";
-import {find, isEqual, isNil, some} from "lodash";
+import {includes, isEqual, isNil} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
 import {User} from "../../models";
 
@@ -28,11 +28,11 @@ export const inviteFriendHandler = async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
     }
 
-    if (some(friend.friendRequests, user._id)) {
+    if (includes(friend.friendRequests.map((f) => f.toString()), user._id.toString())) {
       return res.sendStatus(ResponseCodes.ALREADY_EXIST);
     }
 
-    if (some(friend.friends, user._id)) {
+    if (includes(friend.friends.map((f) => f.toString()), user._id.toString())) {
       return res.sendStatus(ResponseCodes.NOT_ALLOWED);
     }
 

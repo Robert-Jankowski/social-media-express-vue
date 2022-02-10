@@ -1,5 +1,5 @@
 import { Request, Response} from "express";
-import {find, isNil, reject} from "lodash";
+import {includes, isNil} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
 import {User} from "../../models";
 
@@ -22,12 +22,12 @@ export const deleteFriendHandler = async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    if (!find(user.friends, friend._id)) {
+    if (!includes(user.friends.map((f) => f.toString()), friend._id.toString())) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    user.friends = reject(user.friends, friend._id);
-    friend.friends = reject(user.friends, user._id);
+    user.friends = user.friends.filter((f) => f.toString() != friend._id.toString());
+    friend.friends = friend.friends.filter((f) => f.toString() != user._id.toString());
 
     await user.save();
     await friend.save();

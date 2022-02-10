@@ -10,9 +10,9 @@ export const friendsPageErrorMapper = (error) => {
     case 404:
       return 'That person was not found!';
     case 405:
-      return 'You have already invited them!';
-    case 406:
       return 'You and your friend are already... friends!';
+    case 406:
+      return 'You have already invited them!';
     case 500:
       return 'Uhhhh, that\'s probably some server side issue... don\'t worry, not your fault :)';
     default:

@@ -1,5 +1,5 @@
 import { Request, Response} from "express";
-import {find, isNil, reject} from "lodash";
+import {isNil, includes} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
 import {User} from "../../models";
 import {Server as WebsocketServer} from 'socket.io';
@@ -25,11 +25,12 @@ export const acceptFriendHandler = async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    if (!find(user.friendRequests, friend._id) || find(user.friends, friend._id)) {
+    if (!includes(user.friendRequests.map((f) => f.toString()), friend._id.toString())
+      || includes(user.friends.map((f) => f.toString()), friend._id.toString())) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    user.friendRequests = reject(user.friendRequests, friend._id);
+    user.friendRequests = user.friendRequests.filter((f) => f.toString() != friend._id.toString());
     user.friends.push(friend._id);
     friend.friends.push(user._id);
 

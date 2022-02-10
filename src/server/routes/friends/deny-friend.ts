@@ -1,5 +1,5 @@
 import { Request, Response} from "express";
-import {find, isNil, reject} from "lodash";
+import {includes, isNil} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
 import {User} from "../../models";
 
@@ -22,11 +22,12 @@ export const denyFriendHandler = async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    if (!find(user.friendRequests, friend._id) || find(user.friends, friend._id)) {
+    if (!includes(user.friendRequests.map((f) => f.toString()), friend._id.toString()) ||
+        includes(user.friends.map((f) => f.toString()), friend._id.toString())) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    user.friendRequests = reject(user.friendRequests, friend._id);
+    user.friendRequests = user.friendRequests.filter((f) => f.toString() !== friend._id.toString());
     await user.save();
 
     return res.sendStatus(ResponseCodes.OK);
