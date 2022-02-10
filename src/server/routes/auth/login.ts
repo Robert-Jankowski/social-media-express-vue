@@ -45,6 +45,7 @@ export const loginHandler = async (req: Request, res: Response) => {
       .send({
         user: userTokenData,
         token,
+        newRequests: user.friendRequests.length > 0,
       });
 
   } catch (error) {

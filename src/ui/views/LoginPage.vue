@@ -59,6 +59,7 @@
         dataService.user.login(username, password)
           .then((res) => {
             sessionStorage.setItem('microwall-jwt', res.data.token);
+            this.$store.commit('SET_NEW_REQUESTS', res.data.newRequests)
             this.$store.commit('SET_USER', res.data.user)
             this.$router.push({name: 'HomePage'})
           })
