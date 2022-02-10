@@ -1,40 +1,42 @@
-import {Request, Response} from "express";
-import {isNil} from "lodash";
+import { Request, Response} from "express";
+import {find, isEqual, isNil, some} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
 import {User} from "../../models";
 
 export const inviteFriendHandler = async (req: Request, res: Response) => {
-  const {friendUsername, userId} = req.params as {
-    friendUsername: string;
-    userId: string;
-  };
 
   const io = req.app.get('socketio');
 
-  if (isNil(friendUsername) || isNil(userId)) {
-    return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
-  }
+  // @ts-ignore
+  const userId = req.user.id as string;
+  const friendUsername = req.params.friendUsername;
 
   try {
 
     const user = await User.findById(userId);
     const friend = await User.findOne({username: friendUsername});
 
-    if (isNil(user) || isNil(friend)) {
+    if (isNil(user)) {
+      return res.sendStatus(ResponseCodes.FORBIDDEN)
+    }
+
+    if (isNil(friend)) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    if (user._id === friend._id) {
+    if (isEqual(friend._id, user._id)) {
       return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
     }
 
-    // @ts-ignore
-    if (friend.friendRequests.includes(user._id) || friend.friends.includes(user._id)) {
+    if (some(friend.friendRequests, user._id)) {
       return res.sendStatus(ResponseCodes.ALREADY_EXIST);
     }
-    // @ts-ignore
+
+    if (some(friend.friends, user._id)) {
+      return res.sendStatus(ResponseCodes.NOT_ALLOWED);
+    }
+
     friend.friendRequests.push(user._id);
-    // @ts-ignore
     await friend.save();
 
     io.emit(`user/${friend._id.toString()}/requests`, {})
@@ -45,9 +47,7 @@ export const inviteFriendHandler = async (req: Request, res: Response) => {
     return res.sendStatus(ResponseCodes.OK);
 
   } catch (error) {
-    return res
-      .status(ResponseCodes.INTERNAL_ERROR)
-      .send()
+    return res.sendStatus(ResponseCodes.INTERNAL_ERROR);
   }
 
 }

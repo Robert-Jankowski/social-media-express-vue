@@ -13,20 +13,20 @@ class DataService {
       axios.get(this.buildUrl(`wall/${username}${isPrivate ? '/private' : ''}`), this.getProxy()),
   }
   friends = {
-    get: (userId) =>
-      axios.get(this.buildUrl(`user/${userId}/friends`), this.getProxy()),
+    get: () =>
+      axios.get(this.buildUrl(`friends`), this.getProxy()),
 
-    remove: (friendUsername, userId) =>
-      axios.delete(this.buildUrl(`user/${userId}/friends/${friendUsername}`), this.getProxy()),
+    remove: (friendUsername) =>
+      axios.delete(this.buildUrl(`friends/${friendUsername}`), this.getProxy()),
 
-    invite: (friendUsername, userId) =>
-      axios.post(this.buildUrl(`user/${userId}/friends/${friendUsername}/invite`), undefined, this.getProxy()),
+    invite: (friendUsername) =>
+      axios.post(this.buildUrl(`friends/${friendUsername}/invite`), undefined, this.getProxy()),
 
-    accept: (friendUsername, userId) =>
-      axios.post(this.buildUrl(`user/${userId}/friends/${friendUsername}/accept`), undefined, this.getProxy()),
+    accept: (friendUsername) =>
+      axios.post(this.buildUrl(`friends/${friendUsername}/accept`), undefined, this.getProxy()),
 
-    deny: (friendUsername, userId) =>
-      axios.delete(this.buildUrl(`user/${userId}/friends/${friendUsername}/deny`), this.getProxy()),
+    deny: (friendUsername) =>
+      axios.delete(this.buildUrl(`friends/${friendUsername}/deny`), this.getProxy()),
   };
 
   user = {
@@ -36,21 +36,21 @@ class DataService {
     register: (username, password) =>
       axios.post(this.buildUrl('user/register'), {username, password}),
 
-    post: ({title, content, type}, userId) =>
-      axios.post(this.buildUrl(`user/${userId}`), {title, content, type}, this.getProxy()),
+    post: ({title, content, type}) =>
+      axios.post(this.buildUrl(`user`), {title, content, type}, this.getProxy()),
   };
 
   post = {
-    comment: (postId, userId, content) =>
-      axios.post(this.buildUrl(`post/${postId}`), {userId, content}, this.getProxy()),
+    comment: (postId, content) =>
+      axios.post(this.buildUrl(`post/${postId}`), {content}, this.getProxy()),
   }
 
   profile = {
     get: (username) =>
       axios.get(this.buildUrl(`user/${username}`), this.getProxy()),
 
-    edit: (userId, newData) =>
-      axios.put(this.buildUrl(`user/${userId}`), newData, this.getProxy()),
+    edit: (newData) =>
+      axios.put(this.buildUrl(`user`), newData, this.getProxy()),
   }
 
   buildUrl(url) {

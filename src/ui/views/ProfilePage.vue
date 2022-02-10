@@ -122,7 +122,7 @@
         this.editing = true;
       },
       onSubmit(value) {
-        dataService.profile.edit(this.userId, value).then((res) => {
+        dataService.profile.edit(value).then((res) => {
           this.profile = value;
           this.editing = false;
           this.displayInfoMessage('Your new profile is amazing!');
@@ -136,12 +136,12 @@
         this.editing = false;
       },
       onInvite() {
-        dataService.friends.invite(this.profile.username, this.userId)
+        dataService.friends.invite(this.profile.username)
           .then((res) => {
             this.displayInfoMessage('Let\'s check out if this user likes you too!');
           })
           .catch((error) => {
-            this.displayErrorMessage('Something went wrong, you can\'t invite this person right one!');
+            this.displayErrorMessage('Something went wrong, you can\'t invite this person right now!');
           })
       },
     },

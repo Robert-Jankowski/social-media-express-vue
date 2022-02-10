@@ -1,17 +1,12 @@
 import {isNil} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
 import {User} from "../../models";
-import {Request, Response} from "express";
+import { Request, Response} from "express";
 
 export const getFriendsHandler = async (req: Request , res: Response) => {
 
-  const {userId} = req.params as {
-    userId: string;
-  };
-
-  if (isNil(userId)) {
-  return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
-}
+  // @ts-ignore
+  const userId = req.user.id as string;
 
 try {
 
@@ -21,13 +16,13 @@ try {
     .populate('friendRequests');
 
   if (isNil(user)) {
-    return res.sendStatus(ResponseCodes.NOT_FOUND);
+    return res.sendStatus(ResponseCodes.FORBIDDEN);
   }
 
   // @ts-ignore
-  const friends = await user.friends.map((el) => el.username)
+  const friends = user.friends.map((el) => el.username)
   // @ts-ignore
-  const requests = await user.friendRequests.map((el) => el.username)
+  const requests = user.friendRequests.map((el) => el.username)
 
   return res.status(ResponseCodes.OK).send({
     friends,
@@ -35,9 +30,7 @@ try {
   });
 
 } catch (error) {
-  return res
-    .status(ResponseCodes.INTERNAL_ERROR)
-    .send()
+  return res.sendStatus(ResponseCodes.INTERNAL_ERROR);
 }
 
 }

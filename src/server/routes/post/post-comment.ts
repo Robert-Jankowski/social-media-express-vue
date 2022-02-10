@@ -5,11 +5,14 @@ import {Comment, Post, User} from "../../models";
 
 export const postCommentHandler = async (req: Request, res: Response) => {
 
-  const postId = req.params.postId;
-  const userId = req.body.userId;
-  const content = req.body.content;
+  const io = req.app.get('socketio');
 
-  if (isNil(postId) || isNil(userId) || isNil(content)) {
+  // @ts-ignore
+  const userId = req.user.id as string;
+  const content = req.body.content;
+  const postId = req.params.postId;
+
+  if (isNil(content)) {
     return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
   }
 
@@ -17,7 +20,11 @@ export const postCommentHandler = async (req: Request, res: Response) => {
     const user = await User.findById(userId);
     const post = await Post.findById(postId);
 
-    if (isNil(user) || isNil(post)) {
+    if (isNil(user)) {
+      return res.sendStatus(ResponseCodes.FORBIDDEN);
+    }
+
+    if(isNil(post)) {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
@@ -36,9 +43,6 @@ export const postCommentHandler = async (req: Request, res: Response) => {
     await comment.save();
 
     const comments = await Comment.find({post: post._id}).populate('author');
-
-    const io = req.app.get('socketio');
-
 
     io.emit(`wall/${postAuthor.username}/${post.type}`, {
       id: post._id,

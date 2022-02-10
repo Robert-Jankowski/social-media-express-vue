@@ -117,7 +117,7 @@
           return;
         }
 
-        dataService.friends.invite(this.userToInvite, this.userId)
+        dataService.friends.invite(this.userToInvite)
           .then((res) => {
             this.displayInfoMessage('Let\'s check out if this user likes you too!');
           })
@@ -126,7 +126,7 @@
           })
       },
       handleRemoveFriend(value) {
-        dataService.friends.remove(value, this.userId)
+        dataService.friends.remove(value)
           .then((res) => {
             this.displayInfoMessage('You haven\'t liked them anyway.');
             this.friends = this.friends.filter((friend) => friend !== value);
@@ -136,7 +136,7 @@
           })
       },
       handleAcceptFriend(value) {
-        dataService.friends.accept(value, this.userId)
+        dataService.friends.accept(value)
           .then((res) => {
             this.displayInfoMessage('One more friend to your friends list!');
             this.requests = this.requests.filter((friend) => friend !== value);
@@ -148,7 +148,7 @@
           })
       },
       handleDenyFriend(value) {
-        dataService.friends.deny(value, this.userId)
+        dataService.friends.deny(value)
           .then((res) => {
             this.displayInfoMessage('You denied friend request. But why?');
             this.requests = this.requests.filter((friend) => friend !== value);
@@ -169,7 +169,7 @@
         this.friends = [...this.friends, friend.username];
       });
 
-      dataService.friends.get(this.userId).then((res) => {
+      dataService.friends.get().then((res) => {
         this.friends = res.data.friends;
         this.requests = res.data.requests;
         this.loading = false;

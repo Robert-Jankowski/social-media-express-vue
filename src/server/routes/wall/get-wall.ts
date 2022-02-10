@@ -6,9 +6,9 @@ import { PostTypes } from '../../types/post-types';
 
 export const getWallHandler = async (req: Request, res: Response) => {
 
-  const { username } = req.params as {
-    username: string;
-  };
+  // @ts-ignore
+  const userId = req.user?.id;
+  const username = req.params.username;
 
   try {
 
@@ -18,11 +18,8 @@ export const getWallHandler = async (req: Request, res: Response) => {
       return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    // @ts-ignore
     const wallOwnerId = wallOwner._id;
-
-    // @ts-ignore
-    const isAuthenticated = !isNil(req.user);
+    const isAuthenticated = !isNil(userId);
 
     const posts = await Post.find({type: PostTypes.PUBLIC, author: wallOwnerId});
     const postsWithComments = await Promise.all(posts.map( async(post) => {
@@ -48,8 +45,6 @@ export const getWallHandler = async (req: Request, res: Response) => {
         omit(reverse(postsWithComments), 'comments'));
 
   } catch (error) {
-    return res
-      .status(ResponseCodes.INTERNAL_ERROR)
-      .send()
+    return res.sendStatus(ResponseCodes.INTERNAL_ERROR);
   }
 }

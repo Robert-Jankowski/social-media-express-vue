@@ -12,9 +12,9 @@ const routes = Router({
 routes.get('/:username', authenticateToken, getProfileHandler);
 
 // ADD NEW POST
-routes.post('/:userId', authenticateToken, addPostHandler);
+routes.post('/', authenticateToken, addPostHandler);
 
 // EDIT USER DATA
-routes.put('/:userId', authenticateToken, editProfileHandler);
+routes.put('/', authenticateToken, editProfileHandler);
 
 export default routes;

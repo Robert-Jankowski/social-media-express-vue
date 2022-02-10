@@ -1,8 +1,7 @@
-import { isNil } from 'lodash';
-import { ObjectId } from 'mongoose';
+import {includes, isNil } from 'lodash';
 import { User } from '../models';
 
-export const isFriend = async (userId: ObjectId, friendId: ObjectId): Promise<boolean | undefined> => {
+export const isFriend = async (userId: string, friendId: string): Promise<boolean | undefined> => {
 
   const friend = await User.findById(friendId);
 
@@ -10,5 +9,5 @@ export const isFriend = async (userId: ObjectId, friendId: ObjectId): Promise<bo
     return false;
   }
 
-  return friend.friends.includes(userId);
+  return includes(friend.friends.map((friend) => friend.toString()), userId);
 }

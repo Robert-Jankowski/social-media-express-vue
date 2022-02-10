@@ -23,7 +23,7 @@ export const loginHandler = async (req: Request, res: Response) => {
 
 
     if(isNil(user)) {
-      return res.sendStatus(ResponseCodes.NOT_FOUND);
+      return res.sendStatus(ResponseCodes.FORBIDDEN);
     }
 
     const verified = compareSync(password, user.password);

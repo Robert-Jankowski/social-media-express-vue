@@ -9,12 +9,12 @@
           <n-space>
             <router-link :to="`/wall/${friend}`">
               <n-button type="primary" ghost>
-                Public board
+                Public wall
               </n-button>
             </router-link>
             <router-link :to="`/wall/${friend}/private`">
               <n-button type="primary" ghost>
-                Private board
+                Private wall
               </n-button>
             </router-link>
             <n-button @click="onRemove(friend)" strong secondary type="error">Remove friend</n-button>

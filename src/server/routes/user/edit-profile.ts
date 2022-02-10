@@ -13,16 +13,13 @@ export const editProfileHandler = async (req: Request, res: Response) => {
     imageUrl: string;
   };
 
-  const userId = req.params.userId;
-
-  if (isNil(userId)) {
-    return res.sendStatus(ResponseCodes.WRONG_BODY_CONTENT);
-  }
+  // @ts-ignore
+  const userId = req.user.id;
 
   const user = await User.findById(userId);
 
   if (isNil(user)) {
-    return res.sendStatus(ResponseCodes.NOT_FOUND);
+    return res.sendStatus(ResponseCodes.FORBIDDEN);
   }
 
   user.realName = realName;

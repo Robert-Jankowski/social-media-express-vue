@@ -1,39 +1,29 @@
 import {Request, Response} from "express";
 import {User} from "../../models";
-import {UserDefinition} from "../../types/model-definitions";
-import {isNil} from "lodash";
+import {find, isNil} from "lodash";
 import {ResponseCodes} from "../../types/response-codes";
 
 export const getProfileHandler = async (req: Request, res: Response) => {
 
-  const { username } = req.params as {
-    username: string;
-  };
+  const username = req.params.username;
+  // @ts-ignore
+  const userId = req.user.id;
 
   try {
-    // @ts-ignore
-    const profileOwner = await User.findOne({username}) as UserDefinition;
+
+    const profileOwner = await User.findOne({username});
 
     if (isNil(profileOwner)) {
-      return res
-        .status(ResponseCodes.NOT_FOUND)
-        .send()
+      return res.sendStatus(ResponseCodes.NOT_FOUND);
     }
 
-    let canBeInvited = false;
+    const user = await User.findById(userId);
 
-    // @ts-ignore
-    if(!isNil(req.user)) {
-      // @ts-ignore
-      const user = await User.findById(req.user.id);
-
-      if(!isNil(user)) {
-        canBeInvited = !user.friends
-          .map((friend) => friend.toString())
-          // @ts-ignore
-          .includes(profileOwner._id.toString());
-      }
+    if (isNil(user)) {
+      return res.sendStatus(ResponseCodes.FORBIDDEN);
     }
+
+    const canBeInvited = !find(user.friends, profileOwner._id);
 
     return res.status(ResponseCodes.OK)
       .send({
@@ -48,8 +38,6 @@ export const getProfileHandler = async (req: Request, res: Response) => {
         canBeInvited,
       });
   } catch (error) {
-    return res
-      .status(ResponseCodes.INTERNAL_ERROR)
-      .send()
+    return res.sendStatus(ResponseCodes.INTERNAL_ERROR);
   }
 }

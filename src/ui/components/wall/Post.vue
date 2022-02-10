@@ -70,7 +70,7 @@
     methods: {
       linkifyHtml,
       handleSubmit() {
-        dataService.post.comment(this.post.id, this.userId, this.commentToSend)
+        dataService.post.comment(this.post.id, this.commentToSend)
         .catch((error) => {
           this.displayErrorMessage('Something gone wrong, your comment was not posted.')
         })

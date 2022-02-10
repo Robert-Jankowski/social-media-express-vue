@@ -53,7 +53,7 @@
     },
     methods: {
       handleSubmit(value) {
-        dataService.user.post(value, this.userId)
+        dataService.user.post(value)
           .then((res) => {
             this.$router.push(`/wall/${this.username}${res.data.isPrivate ? '/private' : ''}`)
           })

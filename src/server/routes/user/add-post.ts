@@ -16,16 +16,14 @@ export const addPostHandler = async (req: Request, res: Response) => {
   };
 
   // @ts-ignore
-  const userId = req.params?.userId;
+  const userId = req.user.id;
 
   try {
 
     const user = await User.findById(userId);
 
     if (isNil(user)) {
-      return res
-        .status(ResponseCodes.NOT_FOUND)
-        .send()
+      return res.sendStatus(ResponseCodes.FORBIDDEN);
     }
 
     if (type === PostTypes.PRIVATE || type === PostTypes.PUBLIC) {

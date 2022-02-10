@@ -8,8 +8,8 @@ import postRoutes from './post';
 
 const routes = Router();
 
-routes.use('/user/:userId/friends', friendsRoutes);
-routes.use('/user/', authRoutes);
+routes.use('/friends', friendsRoutes);
+routes.use('/user', authRoutes);
 routes.use('/user', userRoutes);
 routes.use('/wall/:username', wallRoutes);
 routes.use('/post/:postId', postRoutes);

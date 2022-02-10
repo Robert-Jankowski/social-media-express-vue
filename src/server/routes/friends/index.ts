@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import {RequestHandler, Router} from 'express';
 import { authenticateToken } from '../../authentication/auth-middleware';
 import {getFriendsHandler} from './get-friends';
 import {inviteFriendHandler} from './invite-friend';
