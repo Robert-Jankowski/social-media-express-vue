@@ -1,6 +1,11 @@
 <template>
   <n-space>
     <n-menu v-model:value="activeKey" mode="horizontal" :options="menuOptions" />
+    <n-button @click="logout" :bordered="false">
+      <n-icon size="20">
+        <log-out-icon/>
+      </n-icon>
+    </n-button>
     <n-icon v-if="newRequests" size="20" color="red">
       <person-add-icon/>
     </n-icon>
@@ -10,11 +15,11 @@
 <script>
   import { defineComponent, h, ref } from 'vue';
   import { RouterLink } from 'vue-router';
-  import { NIcon, NMenu, NSpace } from 'naive-ui';
+  import { NIcon, NMenu, NSpace, NButton } from 'naive-ui';
   import {
     HomeSharp as HomeIcon, ListCircleSharp as WallIcon, PeopleSharp as PeopleIcon,
     PersonSharp as PersonIcon, ReaderSharp as PublicWallIcon, ShieldSharp as PrivateWallIcon,
-    PersonAddOutline as PersonAddIcon
+    PersonAddOutline as PersonAddIcon, LogOut as LogOutIcon,
   } from '@vicons/ionicons5';
   import WebsocketService from "../../services/WebsocketService";
   import {isNil} from "lodash";
@@ -112,7 +117,9 @@
       NMenu,
       NSpace,
       NIcon,
+      NButton,
       PersonAddIcon,
+      LogOutIcon,
     },
     props: ['username'],
     setup (props, context) {
@@ -129,12 +136,18 @@
         'newRequests',
       ]),
     },
+    methods: {
+      logout() {
+        sessionStorage.removeItem('microwall-jwt');
+        window.location.href = '/login';
+      },
+    },
     created() {
       if(!isNil(this.userId)) {
         this.socketService.connect(true);
 
         this.socketService.socket.on(`user/${this.userId}/requests`, () => {
-          this.$store.commit('SET_NEW_REQUESTS', true)
+          this.$store.commit('SET_NEW_REQUESTS', true);
         });
       }
 
